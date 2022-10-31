@@ -22,7 +22,7 @@ class App extends StatelessWidget {
         appBarTheme: const AppBarTheme(
           color: kPrimaryColor,
           systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarBrightness: Brightness.light,
+            statusBarBrightness: Brightness.dark,
             statusBarIconBrightness: Brightness.light,
             statusBarColor: kPrimaryColor,
           ),
