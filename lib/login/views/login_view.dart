@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:xedu/home/view/home_view.dart';
 import 'package:xedu/register/views/register_view.dart';
 import 'package:xedu/themes/color.dart';
 import 'package:xedu/widgets/form_widget.dart';
@@ -23,7 +24,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   late TextEditingController emailEditingController;
   late TextEditingController passwordEditingController;
   bool isObscure = true;
@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
     passwordEditingController = TextEditingController();
     super.initState();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion(
@@ -48,7 +48,9 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: Colors.white,
         body: ListView(
           children: [
-            const SizedBox(height: 65,),
+            const SizedBox(
+              height: 65,
+            ),
             Image.asset(
               'assets/images/logo.png',
               height: 129,
@@ -64,15 +66,25 @@ class _LoginPageState extends State<LoginPage> {
                     child: titleText(),
                   ),
                   subtitleWidget(),
-                  const SizedBox(height: 21,),
+                  const SizedBox(
+                    height: 21,
+                  ),
                   textfieldEmailWidget(),
-                  const SizedBox(height: 24,),
+                  const SizedBox(
+                    height: 24,
+                  ),
                   textFieldPasswordWidget(),
-                  const SizedBox(height: 21,),
+                  const SizedBox(
+                    height: 21,
+                  ),
                   rowRememberMe(),
-                  const SizedBox(height: 24,),
+                  const SizedBox(
+                    height: 24,
+                  ),
                   elevatedButtonMasuk(context),
-                  const SizedBox(height: 24,),
+                  const SizedBox(
+                    height: 24,
+                  ),
                   registerText(),
                 ],
               ),
@@ -107,11 +119,12 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: TextDecoration.underline,
                 fontSize: 13,
               ),
-              recognizer: TapGestureRecognizer()..onTap=() => 
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute<void>(builder: (_) => const RegisterView()),
-              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute<void>(
+                          builder: (_) => const RegisterView()),
+                    ),
             ),
           ],
         ),
@@ -134,16 +147,15 @@ class _LoginPageState extends State<LoginPage> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: ElevatedButton(
-        onPressed: () {
-          
-        },
+        onPressed: () => Navigator.pushReplacement(
+            context, MaterialPageRoute<void>(builder: (_) => const HomeView())),
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,
           backgroundColor: kPrimaryColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-        ), 
+        ),
         child: const CustomTextWidget(
           text: 'Masuk',
           size: 14,
@@ -184,11 +196,11 @@ class _LoginPageState extends State<LoginPage> {
 
   CustomFormWidget textFieldPasswordWidget() {
     return CustomFormWidget(
-      textEditingController: passwordEditingController, 
+      textEditingController: passwordEditingController,
       hintText: 'Password',
       isObscure: isObscure,
-      suffixIcon: isObscure ? Icons.visibility_outlined : 
-      Icons.visibility_off_outlined,
+      suffixIcon:
+          isObscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
       onSuffixTap: () {
         setState(() {
           isObscure = !isObscure;
@@ -199,14 +211,15 @@ class _LoginPageState extends State<LoginPage> {
 
   CustomFormWidget textfieldEmailWidget() {
     return CustomFormWidget(
-      textEditingController: emailEditingController, 
+      textEditingController: emailEditingController,
       hintText: 'Email',
     );
   }
 
   CustomTextWidget subtitleWidget() {
     return const CustomTextWidget(
-      text: 'Masuk degan No.Tlp dan password yang telah kamu buat disaat registrasi',
+      text:
+          'Masuk degan No.Tlp dan password yang telah kamu buat disaat registrasi',
       color: Color.fromRGBO(43, 43, 67, 1),
     );
   }

@@ -1,8 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class CustomTextWidget extends StatelessWidget {
   const CustomTextWidget({
@@ -22,10 +18,12 @@ class CustomTextWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+      maxLines: 3,
       style: TextStyle(
         fontSize: size,
         fontWeight: weight,
         color: color,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }
