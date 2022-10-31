@@ -7,7 +7,7 @@ class IconAndAppNameWidget extends StatelessWidget {
     Key? key, 
     required this.image, 
     required this.name,
-    required this.onIconTap
+    required this.onIconTap,
   }) : super(key: key);
   
   final String image;

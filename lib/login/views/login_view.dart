@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:xedu/home/view/home_view.dart';
+import 'package:xedu/navigation_bar/views/navigation_bar_view.dart';
 import 'package:xedu/register/views/register_view.dart';
 import 'package:xedu/themes/color.dart';
 import 'package:xedu/widgets/form_widget.dart';
@@ -123,8 +123,8 @@ class _LoginPageState extends State<LoginPage> {
                 ..onTap = () => Navigator.pushReplacement(
                       context,
                       MaterialPageRoute<void>(
-                          builder: (_) => const RegisterView()),
-                    ),
+                          builder: (_) => const RegisterView(),),
+                ),
             ),
           ],
         ),
@@ -148,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       child: ElevatedButton(
         onPressed: () => Navigator.pushReplacement(
-            context, MaterialPageRoute<void>(builder: (_) => const HomeView())),
+            context, MaterialPageRoute<void>(builder: (_) => const NavigationBarView()),),
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,
           backgroundColor: kPrimaryColor,
