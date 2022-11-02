@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:xedu/home/view/home_view.dart';
-import 'package:xedu/profile/views/profile_view.dart';
-import 'package:xedu/report/views/report_view.dart';
+import 'package:xedu/features/home/view/home_view.dart';
+import 'package:xedu/features/profile/views/profile_view.dart';
+import 'package:xedu/features/report/views/report_view.dart';
 
 class NavigationBarView extends StatelessWidget {
   const NavigationBarView({super.key});

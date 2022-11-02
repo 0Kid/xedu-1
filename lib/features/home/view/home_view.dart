@@ -1,11 +1,9 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:xedu/home/widgets/icon_and_app_name_widget.dart';
-
-import 'package:xedu/home/widgets/icon_and_text_widget.dart';
+import 'package:xedu/features/home/widgets/icon_and_app_name_widget.dart';
+import 'package:xedu/features/home/widgets/icon_and_text_widget.dart';
 import 'package:xedu/themes/color.dart';
 import 'package:xedu/widgets/text_widget.dart';
 
@@ -37,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
       statusBarColor: kPrimaryColor,
     ),
     child: Scaffold(
+      extendBody: true,
       backgroundColor: Colors.white,
       body: NotificationListener<ScrollUpdateNotification>(
         child: NestedScrollView(
@@ -48,12 +47,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 sliver: SliverList(
                   delegate: SliverChildListDelegate(
                     [
-                      Stack(
-                        alignment: Alignment.topCenter,
-                        children: [
-                          purpleBoxWidget(context),
-                          containerUserDataWidget()
-                        ],
+                      PreferredSize(
+                        preferredSize: const Size.fromHeight(0),
+                        child: Stack(
+                          alignment: Alignment.topCenter,
+                          children: [
+                            purpleBoxWidget(context),
+                            containerUserDataWidget()
+                          ],
+                        ),
                       )
                     ]
                   ),
@@ -273,8 +275,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return SliverAppBar(
       expandedHeight: Platform.isIOS ? 220 : 250,
       pinned: true,
+      elevation: 0,
       title: Visibility(
-        visible: _scrollMatrix >= 160 && true,
+        visible: _scrollMatrix >= 180 && true,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

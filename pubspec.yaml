@@ -8,13 +8,20 @@ environment:
 
 dependencies:
   bloc: ^8.0.2
+  connectivity_plus: ^3.0.2
+  dartz: ^0.10.1
+  equatable: ^2.0.5
   flutter:
     sdk: flutter
   flutter_bloc: ^8.0.1
   flutter_localizations:
     sdk: flutter
   flutter_native_splash: ^2.2.12
+  get_it: ^7.2.0
+  http: ^0.13.5
   intl: ^0.17.0
+  mockito: ^5.3.2
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   bloc_test: ^9.0.2
@@ -29,17 +36,17 @@ flutter:
   assets:
     - assets/images/
   fonts:
-  - family: Poppins
-    fonts:
-      - asset: assets/fonts/Poppins-Regular.ttf
-        weight: 400
-      - asset: assets/fonts/Poppins-Light.ttf
-        weight: 300
-      - asset: assets/fonts/Poppins-Medium.ttf
-        weight: 500
-      - asset: assets/fonts/Poppins-SemiBold.ttf
-        weight: 600
-      - asset: assets/fonts/Poppins-Bold.ttf
-        weight: 700
-      - asset: assets/fonts/Poppins-Italic.ttf
-        style: italic
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Poppins-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Poppins-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Poppins-Italic.ttf
+          style: italic

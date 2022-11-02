@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:xedu/navigation_bar/views/navigation_bar_view.dart';
-import 'package:xedu/register/views/register_view.dart';
+import 'package:xedu/features/navigation_bar/views/navigation_bar_view.dart';
+import 'package:xedu/features/register/views/register_view.dart';
 import 'package:xedu/themes/color.dart';
 import 'package:xedu/widgets/form_widget.dart';
 import 'package:xedu/widgets/text_widget.dart';

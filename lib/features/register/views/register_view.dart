@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:xedu/login/views/login_view.dart';
+import 'package:xedu/features/login/presentation/views/login_view.dart';
 import 'package:xedu/themes/color.dart';
 import 'package:xedu/widgets/form_widget.dart';
 import 'package:xedu/widgets/text_widget.dart';

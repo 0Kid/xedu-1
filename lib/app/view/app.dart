@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:xedu/l10n/l10n.dart';
-import 'package:xedu/login/views/login_view.dart';
+import 'package:xedu/features/login/presentation/views/login_view.dart';
 import 'package:xedu/themes/color.dart';
 
 class App extends StatelessWidget {
