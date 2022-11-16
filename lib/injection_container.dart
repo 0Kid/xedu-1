@@ -6,7 +6,10 @@ import 'package:xedu/core/platform/network_info.dart';
 import 'package:xedu/features/login/data/datasources/login_local_data_source.dart';
 import 'package:xedu/features/login/data/datasources/login_remote_data_source.dart';
 import 'package:xedu/features/login/data/repositories/login_repository_impl.dart';
+import 'package:xedu/features/login/domain/repositories/login_repository.dart';
+import 'package:xedu/features/login/domain/usecases/get_user_data.dart';
 import 'package:xedu/features/login/domain/usecases/post_login.dart';
+import 'package:xedu/features/login/presentation/bloc/auth_bloc.dart';
 import 'package:xedu/features/login/presentation/bloc/login_bloc.dart';
 
 final sl = GetIt.instance;
@@ -15,15 +18,15 @@ Future<void> init() async {
   //!Features
   //login
   //bloc
-  sl.registerFactory(
-    () => LoginBloc(postLogin: sl())
-  );
+  sl.registerFactory(() => LoginBloc(postLogin: sl()));
+  sl.registerFactory(() => AuthBloc(fetch: sl()));
 
   //Use Case
   sl.registerLazySingleton(() => PostLogin(sl()));
+  sl.registerLazySingleton(() => GetUserData(sl()));
 
   //repository
-  sl.registerLazySingleton(() => LoginRepositoryImpl(remoteDataSource: sl(), localDataSource: sl(), networkInfo: sl()));
+  sl.registerLazySingleton<LoginRepository>(() => LoginRepositoryImpl(remoteDataSource: sl(), localDataSource: sl(), networkInfo: sl()));
   
   //data source
   sl.registerLazySingleton<LoginRemoteDataSource>(
