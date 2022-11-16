@@ -8,7 +8,7 @@ const CACHED_BANNER = 'CACHED_BANNER';
 
 abstract class BannerLocalDataSource {
   Future<BannerModel>? getLastBanner();
-  Future<void>? cachedBanner(BannerDataModel);
+  Future<void>? cachedBanner(BannerModel BannerDataModel);
 }
 
 class BannerLocalDataSourceImpl implements BannerLocalDataSource {
@@ -28,7 +28,7 @@ class BannerLocalDataSourceImpl implements BannerLocalDataSource {
   Future<BannerModel>? getLastBanner() {
     final lastBanner = prefs.getString(CACHED_BANNER);
     if(lastBanner != null){
-      return Future.value(BannerModel.fromJson(jsonDecode(lastBanner!)));
+      return Future.value(BannerModel.fromJson(jsonDecode(lastBanner)));
     } else {
       throw CacheException();
     }
