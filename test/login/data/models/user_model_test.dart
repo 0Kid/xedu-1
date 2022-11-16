@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:xedu/features/login/data/model/user_model.dart';
@@ -40,7 +41,7 @@ void main() {
 
       //act
       final result = UserDataModel.fromJson(jsonMap);
-
+      print(result.toString());
       //assert
       expect(result, tUser);
     });
