@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:xedu/core/error/failures.dart';
+import 'package:xedu/core/error/map_error_to_message.dart';
 import 'package:xedu/features/login/domain/entity/user.dart';
 import 'package:xedu/features/login/domain/usecases/post_login.dart';
 
@@ -26,17 +27,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(LoginLoading());
     final result = await postLogin.call(Params(email: event.email, password: event.password));
     result!.fold(
-      (l) => emit(LoginFailed(message: _mapFailureToMessage(l))), 
+      (l) => emit(LoginFailed(message: mapFailureToMessage(l))), 
       (r) => emit(LoginSuccess(user: r))
     );
-  }
-
-  String _mapFailureToMessage(Failure failure) {
-    switch (failure.runtimeType) {
-      case ServerFailure:
-        return SERVER_FAILURE_MESSAGE;
-      default:
-        return 'UnexpectedError';
-    }
   }
 }
