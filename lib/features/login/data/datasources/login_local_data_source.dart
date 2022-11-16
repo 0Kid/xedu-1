@@ -16,22 +16,21 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource{
 
   LoginLocalDataSourceImpl({required this.sharedPreferences});
 
-  @override
-  Future<void>? cacheUser(UserDataModel user) {
+@override
+  Future<void>? cacheUser(UserDataModel userDataModel) {
     return sharedPreferences.setString(
       CACHED_USER_DATA,
-      json.encode(user)
+      jsonEncode(userDataModel)
     );
   }
 
   @override
   Future<UserDataModel>? getUserDataFromLocal() {
-    final data = sharedPreferences.getString('CACHED_USER_DATA');
-    if(data != null){
-      return Future.value(UserDataModel.fromJson(jsonDecode(data)));
-    } else {
+    final jsonString = sharedPreferences.getString(CACHED_USER_DATA);
+    if(jsonString != null) {
+      return Future.value(UserDataModel.fromJson(jsonDecode(jsonString)));
+    } else {  
       throw CacheException();
     }
-
   }
 }
