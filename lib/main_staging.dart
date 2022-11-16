@@ -9,9 +9,11 @@ import 'package:flutter/widgets.dart';
 import 'package:xedu/app/app.dart';
 import 'package:xedu/bootstrap.dart';
 import 'injection_container.dart' as di;
+import 'package:timeago/timeago.dart' as timeago;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
+  timeago.setLocaleMessages('id', timeago.IdMessages());
   bootstrap(() => const App());
 }
