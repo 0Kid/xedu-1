@@ -1,8 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:xedu/features/navigation_bar/views/navigation_bar_view.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:xedu/features/login/presentation/bloc/login_bloc.dart';
+import 'package:xedu/features/login/presentation/views/auth_view.dart';
 import 'package:xedu/features/register/views/register_view.dart';
+import 'package:xedu/features/report/widgets/dialog_widget.dart';
+import 'package:xedu/injection_container.dart';
 import 'package:xedu/themes/color.dart';
 import 'package:xedu/widgets/form_widget.dart';
 import 'package:xedu/widgets/text_widget.dart';
@@ -12,7 +16,10 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const LoginPage();
+    return BlocProvider(
+      create: (context) => sl<LoginBloc>(),
+      child: LoginPage(),
+    );
   }
 }
 
@@ -81,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 24,
                   ),
-                  elevatedButtonMasuk(context),
+                  _blocListernerLogin(context),
                   const SizedBox(
                     height: 24,
                   ),
@@ -92,6 +99,25 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ),
       ),
+    );
+  }
+
+  BlocListener<LoginBloc, LoginState> _blocListernerLogin(BuildContext context) {
+    return BlocListener<LoginBloc, LoginState>(
+      listener: (context, state) {
+        if(state is LoginSuccess){
+          Navigator.pushAndRemoveUntil(
+            context, 
+            MaterialPageRoute(builder: (_) => AuthView()), 
+            (route) => false
+          );
+        } else if (state is LoginFailed) {
+          showDialog(context: context, builder: (_)=> ErrorDialog(errorValue: state.message,));
+        } else {
+          showDialog(context: context, builder: (_)=> LoadingDialog());
+        }
+      },
+      child: elevatedButtonMasuk(context),
     );
   }
 
@@ -123,8 +149,9 @@ class _LoginPageState extends State<LoginPage> {
                 ..onTap = () => Navigator.pushReplacement(
                       context,
                       MaterialPageRoute<void>(
-                          builder: (_) => const RegisterView(),),
-                ),
+                        builder: (_) => const RegisterView(),
+                      ),
+                    ),
             ),
           ],
         ),
@@ -147,8 +174,8 @@ class _LoginPageState extends State<LoginPage> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: ElevatedButton(
-        onPressed: () => Navigator.pushReplacement(
-            context, MaterialPageRoute<void>(builder: (_) => const NavigationBarView()),),
+        onPressed: () => context.read<LoginBloc>().add(PostLoginEvent(email: emailEditingController.text, password: passwordEditingController.text)
+        ),
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,
           backgroundColor: kPrimaryColor,
