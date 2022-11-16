@@ -3,9 +3,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xedu/features/home/domain/entity/banner.dart' as entity;
+import 'package:xedu/features/home/presentation/bloc/banner_bloc.dart';
 import 'package:xedu/features/home/presentation/widgets/icon_and_app_name_widget.dart';
 import 'package:xedu/features/home/presentation/widgets/icon_and_text_widget.dart';
+import 'package:xedu/features/home/presentation/widgets/sizedbox_carousel_widget.dart';
 import 'package:xedu/features/login/data/datasources/login_local_data_source.dart';
 import 'package:xedu/features/login/data/model/user_model.dart';
 import 'package:xedu/features/login/domain/entity/user.dart';
@@ -18,7 +22,10 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HomeScreen();
+    return BlocProvider(
+      create: (context) => sl<BannerBloc>()..add(getBannerEvent()),
+      child: HomeScreen(),
+    );
   }
 }
 
@@ -42,7 +49,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _getUser() async {
-    user = UserDataModel.fromJson(jsonDecode(prefs.getString(CACHED_USER_DATA)!));
+    user =
+        UserDataModel.fromJson(jsonDecode(prefs.getString(CACHED_USER_DATA)!));
   }
 
   @override
@@ -89,7 +97,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(
                   height: 32,
                 ),
-                sizeBoxCarouselWidget(context),
+                BlocBuilder<BannerBloc, BannerState>(
+                  builder: (context, state) {
+                    if (state is BannerLoaded) {
+                      return SizedBoxCarouselWidget(
+                        length: state.banner.banner.length, 
+                        data: state.banner, 
+                        isLoading: false
+                      );
+                    } else if (state is BannerFailed) {
+                      return Text(state.message);
+                    } else {
+                      return SizedBoxCarouselWidget(
+                        length: 2, 
+                        data: entity.Banner(banner: [entity.BannerData(id: 1, image: 'image'), entity.BannerData(id: 1, image: 'image')]), 
+                        isLoading: true
+                      );
+                    }
+                  },
+                ),
                 const SizedBox(
                   height: 25,
                 ),
@@ -205,33 +231,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  SizedBox sizeBoxCarouselWidget(BuildContext context) {
-    return SizedBox(
-      height: 125,
-      width: MediaQuery.of(context).size.width,
-      child: ListView.separated(
-        primary: false,
-        shrinkWrap: true,
-        padding: const EdgeInsets.symmetric(horizontal: 18),
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          return Container(
-            width: 254,
-            height: 125,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6),
-              color: Colors.grey[400],
-            ),
-          );
-        },
-        separatorBuilder: (_, __) => const SizedBox(
-          width: 10,
-        ),
-        itemCount: 5,
-      ),
-    );
-  }
-
   Row rowSubAppWidget() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -283,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
           RowImageAndTextWidget(
             image: 'test',
             subtitleText: user.data.sekolah!.namaSekolah.substring(8),
-            titleText: user.data.sekolah!.namaSekolah.substring(0,7),
+            titleText: user.data.sekolah!.namaSekolah.substring(0, 7),
             subtitleColor: Color.fromRGBO(97, 97, 97, 1),
           ),
         ],
@@ -343,14 +342,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(16, 22, 0, 0),
-                child: CustomTextWidget(
-                  text: 'Hai ${user.data.namaLengkap},',
-                  weight: FontWeight.w500,
-                  size: 17,
-                  color: Colors.white,
-                )
-              ),
+                  padding: EdgeInsets.fromLTRB(16, 22, 0, 0),
+                  child: CustomTextWidget(
+                    text: 'Hai ${user.data.namaLengkap},',
+                    weight: FontWeight.w500,
+                    size: 17,
+                    color: Colors.white,
+                  )),
               const Padding(
                 padding: EdgeInsets.only(left: 16),
                 child: CustomTextWidget(
