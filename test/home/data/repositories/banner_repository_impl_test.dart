@@ -67,7 +67,7 @@ void main() {
         await repository.getBanner();
         //assert
         verify(() => remoteDataSource.getRemoteBanner());
-        verify(() => localDataSource.cachedBanner(tBanner));
+        verify(() => localDataSource.cachedBanner(tBannerModel));
       });
 
       test('should return server failure when call to remote repository failed', () async {
