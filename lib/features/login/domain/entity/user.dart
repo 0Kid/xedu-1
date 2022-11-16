@@ -26,14 +26,14 @@ class User extends Equatable {
     required this.sekolah, 
   });
 
-  final int id;
-  final String email;
-  final String namaLengkap;
-  final String alamat;
-  final String notelp;
-  final String jenisKelamin;
-  final int sekolahId;
-  final Sekolah sekolah;
+  final int? id;
+  final String? email;
+  final String? namaLengkap;
+  final String? alamat;
+  final String? notelp;
+  final String? jenisKelamin;
+  final int? sekolahId;
+  final Sekolah? sekolah;
 
   @override
   List<Object?> get props => [

@@ -24,11 +24,11 @@ class UserDataModel extends UserData {
       "jenis_kelamin": data.jenisKelamin,
       "sekolahId": data.sekolahId,
       "sekolah": {
-        "id": data.sekolah.id,
-        "nama_sekolah": data.sekolah.namaSekolah
+        "id": data.sekolah?.id,
+        "nama_sekolah": data.sekolah?.namaSekolah
       },
-      "token": token
-    }
+    },
+    "token": token
   };
 }
 
@@ -37,14 +37,14 @@ class UserModel extends User {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'], 
-      email: json['email'], 
-      namaLengkap: json['nama_lengkap'], 
-      alamat: json['alamat'], 
-      notelp: json['notelp'], 
-      jenisKelamin: json['jenis_kelamin'], 
-      sekolahId: json['sekolahId'], 
-      sekolah: SekolahModel.fromJson(json['sekolah']), 
+      id: json["id"] == null ? null : json["id"],
+      email: json["email"] == null ? null : json["email"],
+      namaLengkap: json["nama_lengkap"] == null ? null : json["nama_lengkap"],
+      alamat: json["alamat"] == null ? null : json["alamat"],
+      notelp: json["notelp"] == null ? null : json["notelp"],
+      jenisKelamin: json["jenis_kelamin"] == null ? null : json["jenis_kelamin"],
+      sekolahId: json["sekolahId"] == null ? null : json["sekolahId"],
+      sekolah: json["sekolah"] == null ? null : SekolahModel.fromJson(json["sekolah"]),
     );
   }
   
