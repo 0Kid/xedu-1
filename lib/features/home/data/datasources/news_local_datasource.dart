@@ -8,7 +8,7 @@ const CACHED_NEWS = 'CACHED_NEWS';
 
 abstract class NewsLocalDatasource {
   Future<NewsModel>? getLastNews();
-  Future<void>? cachedNews(NewsModel mews);
+  Future<void>? cachedNews(NewsModel news);
 }
 
 class NewsLocalDatasourceImpl extends NewsLocalDatasource {
@@ -17,8 +17,11 @@ class NewsLocalDatasourceImpl extends NewsLocalDatasource {
   NewsLocalDatasourceImpl({required this.prefs});
 
   @override
-  Future<void>? cachedNews(NewsModel mews) {
-    return null;
+  Future<void>? cachedNews(NewsModel news) {
+    return prefs.setString(
+      CACHED_NEWS,
+      jsonEncode(news)
+    );
   }
 
   @override
