@@ -6,9 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xedu/features/home/domain/entity/banner.dart' as entity;
+import 'package:xedu/features/home/domain/entity/news.dart';
 import 'package:xedu/features/home/presentation/bloc/banner_bloc.dart';
+import 'package:xedu/features/home/presentation/bloc/news_bloc.dart';
 import 'package:xedu/features/home/presentation/widgets/icon_and_app_name_widget.dart';
 import 'package:xedu/features/home/presentation/widgets/icon_and_text_widget.dart';
+import 'package:xedu/features/home/presentation/widgets/listview_berita_widget.dart';
 import 'package:xedu/features/home/presentation/widgets/sizedbox_carousel_widget.dart';
 import 'package:xedu/features/login/data/datasources/login_local_data_source.dart';
 import 'package:xedu/features/login/data/model/user_model.dart';
@@ -22,8 +25,15 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<BannerBloc>()..add(getBannerEvent()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => sl<BannerBloc>()..add(getBannerEvent()),
+        ),
+        BlocProvider(
+          create: (context) => sl<NewsBloc>()..add(GetNewsEvent()),
+        ),
+      ],
       child: HomeScreen(),
     );
   }
@@ -97,25 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(
                   height: 32,
                 ),
-                BlocBuilder<BannerBloc, BannerState>(
-                  builder: (context, state) {
-                    if (state is BannerLoaded) {
-                      return SizedBoxCarouselWidget(
-                        length: state.banner.banner.length, 
-                        data: state.banner, 
-                        isLoading: false
-                      );
-                    } else if (state is BannerFailed) {
-                      return Text(state.message);
-                    } else {
-                      return SizedBoxCarouselWidget(
-                        length: 2, 
-                        data: entity.Banner(banner: [entity.BannerData(id: 1, image: 'image'), entity.BannerData(id: 1, image: 'image')]), 
-                        isLoading: true
-                      );
-                    }
-                  },
-                ),
+                blocBuilderBanner(),
                 const SizedBox(
                   height: 25,
                 ),
@@ -131,6 +123,28 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ),
+    );
+  }
+
+  BlocBuilder<BannerBloc, BannerState> blocBuilderBanner() {
+    return BlocBuilder<BannerBloc, BannerState>(
+      builder: (context, state) {
+        if (state is BannerLoaded) {
+          return SizedBoxCarouselWidget(
+            length: state.banner.banner.length, 
+            data: state.banner, 
+            isLoading: false
+          );
+        } else if (state is BannerFailed) {
+          return Text(state.message);
+        } else {
+          return SizedBoxCarouselWidget(
+            length: 2, 
+            data: entity.Banner(banner: [entity.BannerData(id: 1, image: 'image'), entity.BannerData(id: 1, image: 'image')]), 
+            isLoading: true
+          );
+        }
+      },
     );
   }
 
@@ -157,77 +171,31 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(
             height: 18,
           ),
-          listviewBerita()
+          blocBuilderNews()
         ],
       ),
     );
   }
 
-  ListView listviewBerita() {
-    return ListView.separated(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      primary: false,
-      shrinkWrap: true,
-      itemBuilder: (context, index) => Container(
-        width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.fromLTRB(8, 9, 13, 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(6),
-          boxShadow: const [
-            BoxShadow(
-              blurRadius: 8,
-              offset: Offset(0, 3),
-              color: Color.fromRGBO(149, 149, 149, .25),
-            )
-          ],
-        ),
-        child: Row(
-          children: [
-            containerDetailBerita(),
-            const SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  CustomTextWidget(
-                    text:
-                        'alsdakljshdalkjdhalkjdhajklsdhajlksdhajskldhaskjdhajskdhaasdasdskdhasdjklashdjklsahdasjlkdhsadkjasjkdhjkas',
-                    weight: FontWeight.w500,
-                    color: kPurpleTextColor,
-                  ),
-                  SizedBox(
-                    height: 24,
-                  ),
-                  CustomTextWidget(
-                    text: '5 Hari yang lalu',
-                    weight: FontWeight.w500,
-                    color: Color.fromRGBO(149, 149, 149, 1),
-                    size: 11,
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-      separatorBuilder: (context, index) => const SizedBox(
-        height: 16,
-      ),
-      itemCount: 10,
-    );
-  }
-
-  Container containerDetailBerita() {
-    return Container(
-      width: 116,
-      height: 80,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(3),
-        color: Colors.grey[400],
-      ),
+  BlocBuilder<NewsBloc, NewsState> blocBuilderNews() {
+    return BlocBuilder<NewsBloc, NewsState>(
+      builder: (context, state) {
+        if (state is NewsLoaded) {
+          return ListViewBeritaWidget(
+            length: state.news.data.length, 
+            data: state.news, 
+            isLoading: false
+          );
+        } else if(state is NewsFailed) {
+          return Text(state.message);
+        } else {
+          return ListViewBeritaWidget(
+            length: 2, 
+            data: News(data: [NewsData(id: 1, judul: 'judul', image: 'image', content: 'content', createdAt: DateTime.now()),NewsData(id: 1, judul: 'judul', image: 'image', content: 'content', createdAt: DateTime.now())]), 
+            isLoading: true
+          );
+        }
+      },
     );
   }
 
