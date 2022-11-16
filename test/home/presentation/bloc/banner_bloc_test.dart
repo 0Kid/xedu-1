@@ -1,10 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:xedu/core/error/failures.dart';
 import 'package:xedu/core/usecase/usecase.dart';
 import 'package:xedu/features/home/data/models/banner_model.dart';
 import 'package:xedu/features/home/domain/usecases/banner_usecase.dart';
 import 'package:xedu/features/home/presentation/bloc/banner_bloc.dart';
+import 'package:xedu/features/login/presentation/bloc/login_bloc.dart';
 
 
 class MockGetBanner extends Mock implements GetBanner {}
@@ -37,6 +39,34 @@ void main() {
       await untilCalled(() => mockGetBanner(NoParams()));
       //assert
       verify(() => mockGetBanner(NoParams()));
+    });
+
+    test('sholt emit [BannerInitial, BannerLoading, BannerLoaded', () async*{
+      //assert
+      when(() => mockGetBanner(NoParams())).thenAnswer((_) async => Right(tBannerModel));
+      //expect later
+      final expected = [
+        BannerInitial(),
+        BannerLoading(),
+        BannerLoaded(banner: tBannerModel)
+      ];
+      expectLater(bloc.state, expected);
+      //act
+      bloc.add(getBannerEvent());
+    });
+
+    test('should emit [BannerInitial, BannerLoading, BannerFailed] when failed to get data', () async* {
+      //arrange
+      when(() => mockGetBanner(NoParams())).thenAnswer((_) async => Left(ServerFailure()));
+      //expect later
+      final expected = [
+        BannerInitial(),
+        BannerLoading(),
+        BannerFailed(SERVER_FAILURE_MESSAGE),
+      ];
+      expectLater(bloc.state, expected);
+      //act
+      bloc.add(getBannerEvent());
     });
   });
 }
