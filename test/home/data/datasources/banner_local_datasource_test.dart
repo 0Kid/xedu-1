@@ -53,7 +53,7 @@ void main() {
 
     test('should return shared preference to cache data', () async {
       //act
-      datasource.cachedBanner(tBannerModel.toJson());
+      datasource.cachedBanner(tBannerModel);
       //assert
       final expectedString = jsonEncode(tBannerModel.toJson());
       verify(() => mockSharedPreference.setString(CACHED_BANNER, expectedString));
