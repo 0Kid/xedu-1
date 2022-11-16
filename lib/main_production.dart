@@ -7,7 +7,9 @@
 
 import 'package:xedu/app/app.dart';
 import 'package:xedu/bootstrap.dart';
+import 'injection_container.dart' as di;
 
-void main() {
+void main() async {
+  await di.init();
   bootstrap(() => const App());
 }
