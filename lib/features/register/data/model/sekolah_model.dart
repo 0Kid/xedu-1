@@ -9,5 +9,4 @@ class SekolahModel extends Sekolah {
       namaSekolah: json['nama_sekolah']
     );
   }
-  
 }

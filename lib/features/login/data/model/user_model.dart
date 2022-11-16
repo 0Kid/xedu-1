@@ -13,6 +13,23 @@ class UserDataModel extends UserData {
       token: json['token']
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    "data": {
+      "id": data.id,
+      "email": data.email,
+      "nama_lengkap": data.namaLengkap,
+      "alamat": data.alamat,
+      "notelp": data.notelp,
+      "jenis_kelamin": data.jenisKelamin,
+      "sekolahId": data.sekolahId,
+      "sekolah": {
+        "id": data.sekolah.id,
+        "nama_sekolah": data.sekolah.namaSekolah
+      },
+      "token": token
+    }
+  };
 }
 
 class UserModel extends User {
