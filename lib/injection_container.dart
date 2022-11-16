@@ -3,6 +3,12 @@ import 'package:http/http.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xedu/core/platform/network_info.dart';
+import 'package:xedu/features/home/data/datasources/banner_local_datasource.dart';
+import 'package:xedu/features/home/data/datasources/banner_remote_datasource.dart';
+import 'package:xedu/features/home/data/repositories/banner_repository_impl.dart';
+import 'package:xedu/features/home/domain/repositories/banner_repository.dart';
+import 'package:xedu/features/home/domain/usecases/banner_usecase.dart';
+import 'package:xedu/features/home/presentation/bloc/banner_bloc.dart';
 import 'package:xedu/features/login/data/datasources/login_local_data_source.dart';
 import 'package:xedu/features/login/data/datasources/login_remote_data_source.dart';
 import 'package:xedu/features/login/data/repositories/login_repository_impl.dart';
@@ -35,6 +41,27 @@ Future<void> init() async {
   sl.registerLazySingleton<LoginLocalDataSource>(
     ()=> LoginLocalDataSourceImpl(sharedPreferences: sl()) 
   );
+
+  
+  //home
+  //bloc
+  sl.registerFactory(() => BannerBloc(getBanner: sl()));
+
+  //use case
+  sl.registerLazySingleton(() => GetBanner(sl()));
+
+  //repository
+  sl.registerLazySingleton<BannerRepository>(
+    () => BannerRepositoryImpl(
+      localDataSource: sl(), 
+      remoteDataSource: sl(), 
+      networkInfo: sl()
+      )
+    );
+
+  //data source
+  sl.registerLazySingleton<BannerRemoteDataSource>(() => BannerRemoteDataSourceImpl(client: sl()));
+  sl.registerLazySingleton<BannerLocalDataSource>(()=> BannerLocalDataSourceImpl(prefs: sl()));
 
 
   //!Core
