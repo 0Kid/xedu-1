@@ -14,19 +14,22 @@ class NewsData extends Equatable {
   final String judul;
   final String image;
   final String content;
+  final DateTime createdAt;
 
   NewsData({
     required this.id, 
     required this.judul, 
     required this.image, 
-    required this.content
+    required this.content,
+    required this.createdAt
   });
 
   Map<String, dynamic> toJson() => {
     "id": id,
     "judul": judul,
     "image": image,
-    "content": content
+    "content": content,
+    "createdAt": createdAt.toIso8601String()
   };
 
   @override
@@ -34,6 +37,7 @@ class NewsData extends Equatable {
     id,
     judul,
     image,
-    content
+    content,
+    createdAt
   ];
 }

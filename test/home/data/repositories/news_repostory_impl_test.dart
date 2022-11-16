@@ -33,7 +33,7 @@ void main() {
   });
 
   group('get news', () {
-    final tNewsData = [NewsDataModel(id: 1, judul: 'judul', image: 'image', content: 'content')];
+    final tNewsData = [NewsDataModel(id: 1, judul: 'judul', image: 'image', content: 'content', createdAt: DateTime.parse('2022-11-13T16:10:09.000Z'))];
     final tNewsModel = NewsModel(data: tNewsData);
     final News tNews = tNewsModel;
 

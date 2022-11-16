@@ -15,15 +15,15 @@ class NewsModel extends News {
 }
 
 class NewsDataModel extends NewsData {
-  NewsDataModel({required super.id, required super.judul, required super.image, required super.content});
+  NewsDataModel({required super.id, required super.judul, required super.image, required super.content, required super.createdAt});
   
   factory NewsDataModel.fromJson(Map<String, dynamic> json) {
     return NewsDataModel(
       id: json['id'], 
       judul: json['judul'], 
       image: json['image'], 
-      content: json['content']
+      content: json['content'],
+      createdAt: DateTime.parse(json['createdAt'])
     );
   }
-  
 }

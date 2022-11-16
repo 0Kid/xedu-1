@@ -17,7 +17,7 @@ void main() {
     usecase = GetNews(repository: mockNewsRepository);
   });
 
-  final tNewsData = [NewsData(id: 1, judul: 'judul', image: 'image', content: 'content')];
+  final tNewsData = [NewsData(id: 1, judul: 'judul', image: 'image', content: 'content', createdAt: DateTime.parse('2022-11-13T16:10:09.000Z'))];
   final tNews = News(data: tNewsData);
 
   test('should get data from news repository', () async {

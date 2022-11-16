@@ -18,7 +18,7 @@ void main() {
     bloc = NewsBloc(usecase: mockGetNews);
   });
 
-  final tNewsDataModel = NewsDataModel(id: 1, judul: 'judul', image: 'image', content: 'content');
+  final tNewsDataModel = NewsDataModel(id: 1, judul: 'judul', image: 'image', content: 'content', createdAt: DateTime.parse('2022-11-13T16:10:09.000Z'));
   final tNewsData = [tNewsDataModel];
   final tNewsModel = NewsModel(data: tNewsData);
 
