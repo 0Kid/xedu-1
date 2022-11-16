@@ -23,8 +23,8 @@ class BannerRepositoryImpl implements BannerRepository {
     if(await networkInfo.isConnected){
         try {
         final result = await remoteDataSource.getRemoteBanner();
-        localDataSource.cachedBanner(result);
-        return Right(result!);
+        localDataSource.cachedBanner(result!);
+        return Right(result);
       } on ServerException {
         return Left(ServerFailure());
       }
