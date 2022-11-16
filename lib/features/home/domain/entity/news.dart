@@ -22,6 +22,13 @@ class NewsData extends Equatable {
     required this.content
   });
 
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "judul": judul,
+    "image": image,
+    "content": content
+  };
+
   @override
   List<Object?> get props => [
     id,
