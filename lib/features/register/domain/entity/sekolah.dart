@@ -13,3 +13,13 @@ class Sekolah extends Equatable{
   List<Object?> get props => [id, namaSekolah];
   
 }
+
+class SekolahData extends Equatable {
+  final List<Sekolah> sekolah;
+
+  SekolahData({required this.sekolah});
+
+  @override
+  List<Object?> get props => [sekolah];
+  
+}
