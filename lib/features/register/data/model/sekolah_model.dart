@@ -10,3 +10,13 @@ class SekolahModel extends Sekolah {
     );
   }
 }
+
+class SekolahDataModel extends SekolahData {
+  SekolahDataModel({required super.sekolah});
+
+  factory SekolahDataModel.fromJson(Map<String, dynamic> json ){
+    return SekolahDataModel(
+      sekolah: List<SekolahModel>.from(json['data'].map((x)=> SekolahModel.fromJson(x)))
+    );
+  }
+}
