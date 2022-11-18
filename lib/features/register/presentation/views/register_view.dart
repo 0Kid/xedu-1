@@ -1,6 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xedu/features/login/presentation/views/login_view.dart';
+import 'package:xedu/features/register/presentation/bloc/sekolah_bloc.dart';
+import 'package:xedu/features/register/presentation/widget/dropdown_sekolah_widget.dart';
+import 'package:xedu/injection_container.dart';
 import 'package:xedu/themes/color.dart';
 import 'package:xedu/widgets/form_widget.dart';
 import 'package:xedu/widgets/text_widget.dart';
@@ -10,7 +14,10 @@ class RegisterView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const RegisterScreen();
+    return BlocProvider(
+      create: (context) => sl<SekolahBloc>()..add(GetSekolahEvent()),
+      child: RegisterScreen(),
+    );
   }
 }
 
@@ -32,6 +39,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool? isPria = false;
   bool? isWanita = false;
   String? gender;
+  List<String> list = <String>['One', 'Two', 'Three', 'Four'];
+  late String? dropdownValue;
 
   @override
   void initState() {
@@ -41,6 +50,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     alamatEditingController = TextEditingController();
     telpEditingController = TextEditingController();
     passwordEditingController = TextEditingController();
+    dropdownValue = null;
     super.initState();
   }
 
@@ -50,36 +60,87 @@ class _RegisterScreenState extends State<RegisterScreen> {
       backgroundColor: Colors.white,
       body: ListView(
         padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
-
         children: [
           const SizedBox(height: 48),
           headingImage(),
-          const SizedBox(height: 16,),
+          const SizedBox(
+            height: 16,
+          ),
           textTitle(),
-          const SizedBox(height: 18,),
+          const SizedBox(
+            height: 18,
+          ),
           subtitleWidget(),
           const SizedBox(height: 21),
           textfieldEmailWidget(),
-          const SizedBox(height: 8,),
+          const SizedBox(
+            height: 8,
+          ),
           smolTextWidget(),
-          const SizedBox(height: 18,),
+          const SizedBox(
+            height: 18,
+          ),
           textfieldNamaWidget(),
-          const SizedBox(height: 21,),
+          const SizedBox(
+            height: 21,
+          ),
           textfieldUmurWidget(),
-          const SizedBox(height: 21,),
+          const SizedBox(
+            height: 21,
+          ),
           textfieldAlamatWidget(),
-          const SizedBox(height: 21,),
+          const SizedBox(
+            height: 21,
+          ),
           textfieldTeleponWidget(),
-          const SizedBox(height: 21,),
+          const SizedBox(
+            height: 21,
+          ),
+          BlocBuilder<SekolahBloc, SekolahState>(
+            builder: (context, state) {
+              if(state is SekolahLoaded){
+                return DropdownSekolahWidget(
+                  data: state.sekolahData,
+                  dropdownValue: dropdownValue,
+                  onChanged: (value) {
+                    setState(() {
+                      dropdownValue = value;
+                    });
+                  },
+                );
+              } else if (state is SekolahFailed){
+                return Container();
+              } else {
+                return Container();
+              }
+            },
+          ),
+          const SizedBox(
+            height: 28,
+          ),
           textfieldPasswordWidget(),
-          const SizedBox(height: 28,),
+          const SizedBox(
+            height: 28,
+          ),
           rowGenderWidget(),
-          const SizedBox(height: 24,),
+          const SizedBox(
+            height: 24,
+          ),
           elevatedButtonRegister(context),
-          const SizedBox(height: 24,),
+          const SizedBox(
+            height: 24,
+          ),
           textLoginWidget()
         ],
       ),
+    );
+  }
+
+    CustomFormWidget textfieldLoadingWidget() {
+    return CustomFormWidget(
+      textEditingController: telpEditingController,
+      hintText: 'Sekolah',
+      keyboardType: TextInputType.number,
     );
   }
 
@@ -107,11 +168,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 decoration: TextDecoration.underline,
                 fontSize: 13,
               ),
-              recognizer: TapGestureRecognizer()..onTap=() => 
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute<void>(builder: (_) => const LoginView()),
-              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute<void>(
+                          builder: (_) => const LoginView()),
+                    ),
             ),
           ],
         ),
@@ -134,16 +196,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: ElevatedButton(
-        onPressed: () {
-          
-        },
+        onPressed: () {},
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,
           backgroundColor: kPrimaryColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-        ), 
+        ),
         child: const CustomTextWidget(
           text: 'Daftar',
           size: 14,
@@ -172,7 +232,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             setState(() {
               isPria = value;
               isPria == true ? gender = 'pria' : gender = '';
-              if(isWanita == true) isWanita = false;
+              if (isWanita == true) isWanita = false;
             });
           },
         ),
@@ -181,7 +241,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           size: 14,
           color: Color.fromRGBO(104, 104, 104, 1),
         ),
-        const SizedBox(width: 28,),
+        const SizedBox(
+          width: 28,
+        ),
         Checkbox(
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           visualDensity: VisualDensity.compact,
@@ -197,7 +259,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             setState(() {
               isWanita = value;
               isWanita == true ? gender = 'wanita' : gender = '';
-              if(isPria == true) isPria = false;
+              if (isPria == true) isPria = false;
             });
           },
         ),
@@ -212,11 +274,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   CustomFormWidget textfieldPasswordWidget() {
     return CustomFormWidget(
-      textEditingController: passwordEditingController, 
+      textEditingController: passwordEditingController,
       hintText: 'Buat password',
       isObscure: isObscure,
-      suffixIcon: isObscure ? Icons.visibility_outlined : 
-      Icons.visibility_off_outlined,
+      suffixIcon:
+          isObscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
       onSuffixTap: () {
         setState(() {
           isObscure = !isObscure;
@@ -227,7 +289,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   CustomFormWidget textfieldTeleponWidget() {
     return CustomFormWidget(
-      textEditingController: telpEditingController, 
+      textEditingController: telpEditingController,
       hintText: 'No Telepon',
       keyboardType: TextInputType.number,
     );
@@ -235,14 +297,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   CustomFormWidget textfieldAlamatWidget() {
     return CustomFormWidget(
-      textEditingController: alamatEditingController, 
+      textEditingController: alamatEditingController,
       hintText: 'Alamat',
     );
   }
 
   CustomFormWidget textfieldUmurWidget() {
     return CustomFormWidget(
-      textEditingController: umurEditingController, 
+      textEditingController: umurEditingController,
       hintText: 'Umur',
       keyboardType: TextInputType.number,
     );
@@ -250,7 +312,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   CustomFormWidget textfieldNamaWidget() {
     return CustomFormWidget(
-      textEditingController: namaEditingController, 
+      textEditingController: namaEditingController,
       hintText: 'Nama Lengkap',
     );
   }
@@ -265,7 +327,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   CustomFormWidget textfieldEmailWidget() {
     return CustomFormWidget(
-      textEditingController: emailEditingController, 
+      textEditingController: emailEditingController,
       hintText: 'Email',
       keyboardType: TextInputType.emailAddress,
     );
