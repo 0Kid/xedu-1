@@ -23,6 +23,11 @@ import 'package:xedu/features/login/domain/usecases/get_user_data.dart';
 import 'package:xedu/features/login/domain/usecases/post_login.dart';
 import 'package:xedu/features/login/presentation/bloc/auth_bloc.dart';
 import 'package:xedu/features/login/presentation/bloc/login_bloc.dart';
+import 'package:xedu/features/register/data/datasource/sekolah_remote_datasource.dart';
+import 'package:xedu/features/register/data/repositories/sekolah_repository_impl.dart';
+import 'package:xedu/features/register/domain/repositories/sekolah_repository.dart';
+import 'package:xedu/features/register/domain/usecase/sekolah_usecase.dart';
+import 'package:xedu/features/register/presentation/bloc/sekolah_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -73,6 +78,27 @@ Future<void> init() async {
         networkInfo: sl()
       )
     );
+
+  //register
+  //bloc
+  sl.registerFactory(() => SekolahBloc(usecase: sl()));
+
+  //usecase
+  sl.registerLazySingleton(() => GetSekolah(repository: sl()));
+
+  //resosiotry
+  sl.registerLazySingleton<SekolahRepository>(
+    () => SekolahRepositoryImpl(
+      remoteDatasource: sl(), 
+      networkInfo: sl()
+    )
+  );
+
+  //datasource
+  sl.registerLazySingleton<SekolahRemoteDatasource>(
+    () => SekolahRemoteDatasourceImpl(client: sl())
+  );
+
 
   //data source
   sl.registerLazySingleton<BannerRemoteDataSource>(() => BannerRemoteDataSourceImpl(client: sl()));
