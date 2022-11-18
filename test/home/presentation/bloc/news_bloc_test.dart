@@ -45,7 +45,7 @@ void main() {
       NewsLoading(),
       NewsLoaded(tNewsModel)
     ];
-    expectLater(bloc.state, expected);
+    expectLater(bloc.state, emitsInOrder(expected));
     //act
     bloc.add(GetNewsEvent());
   });
@@ -59,7 +59,7 @@ void main() {
       NewsLoading(),
       NewsFailed(SERVER_FAILURE_MESSAGE)
     ];
-    expectLater(bloc.state, expected);
+    expectLater(bloc.state, emitsInOrder(expected));
     //act
     bloc.add(GetNewsEvent());
   });

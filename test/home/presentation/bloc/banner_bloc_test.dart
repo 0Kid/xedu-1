@@ -50,7 +50,7 @@ void main() {
         BannerLoading(),
         BannerLoaded(banner: tBannerModel)
       ];
-      expectLater(bloc.state, expected);
+      expectLater(bloc.state, emitsInOrder(expected));
       //act
       bloc.add(getBannerEvent());
     });
@@ -64,7 +64,7 @@ void main() {
         BannerLoading(),
         BannerFailed(SERVER_FAILURE_MESSAGE),
       ];
-      expectLater(bloc.state, expected);
+      expectLater(bloc.state, emitsInOrder(expected));
       //act
       bloc.add(getBannerEvent());
     });
