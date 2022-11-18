@@ -52,7 +52,7 @@ void main() {
         Uri.http(URL, '/api/berita')
       )).thenAnswer((_) async => http.Response('something went wrong', 404));
       //act
-      final call = await datasource.getRemoteNews;
+      final call = datasource.getRemoteNews;
       //assert
       expect(()=> call(), throwsA(TypeMatcher<ServerException>()));
     });
