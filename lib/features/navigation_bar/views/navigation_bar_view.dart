@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xedu/features/home/presentation/views/home_view.dart';
-import 'package:xedu/features/profile/views/profile_view.dart';
+import 'package:xedu/features/profile/presentation/views/profile_view.dart';
 import 'package:xedu/features/report/views/report_view.dart';
 
 class NavigationBarView extends StatelessWidget {
