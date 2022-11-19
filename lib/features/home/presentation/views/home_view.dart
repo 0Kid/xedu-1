@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:appcheck/appcheck.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -99,6 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ];
             },
             body: ListView(
+              primary: false,
+              physics: NeverScrollableScrollPhysics(),
               children: [
                 const SizedBox(
                   height: 36,
@@ -211,7 +214,9 @@ class _HomeScreenState extends State<HomeScreen> {
         IconAndAppNameWidget(
           image: 'assets/images/video.png',
           name: 'Xedu Video',
-          onIconTap: () {},
+          onIconTap: () async {
+            await _launchURL();
+          },
         ),
         IconAndAppNameWidget(
           image: 'assets/images/health.png',
@@ -220,6 +225,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ],
     );
+  }
+
+  Future<void> _launchURL() async {
+    await AppCheck.launchApp("com.google.android.youtube");
   }
 
   Container containerUserDataWidget() {

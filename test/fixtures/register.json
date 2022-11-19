@@ -1,4 +1,11 @@
 {
-    "status": 200,
-    "message": "SUCCESS"
+    "data": {
+        "id": 1,
+        "email": "budi@gmail.com",
+        "nama_lengkap": "budi",
+        "alamat": "bandung",
+        "notelp": "1",
+        "sekolahId": 1,
+        "jenis_kelamin": "pria"
+    }
 }

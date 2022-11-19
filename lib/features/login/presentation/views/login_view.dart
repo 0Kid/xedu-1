@@ -112,7 +112,11 @@ class _LoginPageState extends State<LoginPage> {
             (route) => false
           );
         } else if (state is LoginFailed) {
-          showDialog(context: context, builder: (_)=> ErrorDialog(errorValue: state.message,));
+          showDialog(
+            context: context, 
+            builder: (_) => ErrorDialog(
+              errorValue: state.message
+            )).then((_) => Navigator.pop(context));
         } else {
           showDialog(context: context, builder: (_)=> LoadingDialog());
         }
