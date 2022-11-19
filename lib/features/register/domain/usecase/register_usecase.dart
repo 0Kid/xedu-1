@@ -13,16 +13,14 @@ class PostRegistration extends UseCase<Register, RegisterParams> {
   @override
   Future<Either<Failure, Register>?> call(RegisterParams params) async {
     return await repository.postRegistration(
-      Register(
-        email: params.email, 
-        namaLengkap: params.namaLengkap, 
-        umur: params.umur, 
-        alamat: params.alamat, 
-        noTelp: params.noTelp, 
-        sekolahId: params.sekolahId, 
-        jenisKelamin: params.jenisKelamin, 
-        password: params.password
-      )
+      email: params.email, 
+      namaLengkap: params.namaLengkap, 
+      umur: params.umur, 
+      alamat: params.alamat, 
+      noTelp: params.noTelp, 
+      sekolahId: params.sekolahId, 
+      jenisKelamin: params.jenisKelamin, 
+      password: params.password
     );
   }
 }
