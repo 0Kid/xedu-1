@@ -25,8 +25,11 @@ class RowImageAndTextWidget extends StatelessWidget {
           width: 41,
           height: 41,
           decoration: BoxDecoration(
-            color: Colors.grey[400],
+            color: Colors.white,
             shape: BoxShape.circle,
+            image: DecorationImage(
+              image: AssetImage(image)
+            )
           ),
         ),
         const SizedBox(width: 6),
