@@ -25,14 +25,14 @@ class RegisterRemoteDatasourceImpl extends RegisterRemoteDatasource {
   @override
   Future<RegisterModel>? remoteRegister({required String email, required String namaLengkap, required int umur, required String alamat, required String noTelp, required int sekolahId, required String jenisKelamin, required String password}) async {
     final response = await client.post(
-      Uri.http(URL, '/api/signup'),
+      Uri.http(URL, '/api/auth/signup'),
       body: {
         "email": email,
         "nama_lengkap": namaLengkap,
-        "umur": umur,
+        "umur": umur.toString(),
         "alamat": alamat,
         "notelp": noTelp,
-        "sekolahId": sekolahId,
+        "sekolahId": sekolahId.toString(),
         "jenis_kelamin": jenisKelamin,
         "password": password
       }
