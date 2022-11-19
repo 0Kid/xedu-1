@@ -103,9 +103,6 @@ class _HomeScreenState extends State<HomeScreen> {
               primary: false,
               physics: NeverScrollableScrollPhysics(),
               children: [
-                const SizedBox(
-                  height: 36,
-                ),
                 rowSubAppWidget(),
                 const SizedBox(
                   height: 32,
@@ -249,7 +246,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Row(
         children: [
           RowImageAndTextWidget(
-            image: 'test',
+            image: 'assets/images/user.png',
             subtitleText: '17 Tahun',
             titleText: 'Pelajar',
           ),
@@ -257,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
             width: 32,
           ),
           RowImageAndTextWidget(
-            image: 'test',
+            image: 'assets/images/school.png',
             subtitleText: user.data.sekolah!.namaSekolah.substring(8),
             titleText: user.data.sekolah!.namaSekolah.substring(0, 7),
             subtitleColor: Color.fromRGBO(97, 97, 97, 1),
