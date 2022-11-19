@@ -12,8 +12,8 @@ class DropdownSekolahWidget extends StatelessWidget {
   });
   
   final SekolahData data;
-  final String? dropdownValue;
-  final Function(String?)? onChanged;
+  final int? dropdownValue;
+  final Function(int?)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +22,15 @@ class DropdownSekolahWidget extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(
           color: Color.fromRGBO(120, 120, 120, 1),
+          width: 1
         ),
         borderRadius: BorderRadius.circular(7)
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton(
           items: data.sekolah
-            .map<DropdownMenuItem<String>>(
-                (value) => DropdownMenuItem<String>(value: value.namaSekolah, child: Text(value.namaSekolah))
+            .map<DropdownMenuItem<int>>(
+                (value) => DropdownMenuItem<int>(value: value.id, child: Text(value.namaSekolah))
             )
             .toList(),
           onChanged: onChanged,
