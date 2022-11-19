@@ -10,6 +10,7 @@ class CustomFormWidget extends StatelessWidget {
     this.onSuffixTap,
     this.suffixIcon,
     this.keyboardType = TextInputType.text,
+    required this.errorMessage
   }) : super(key: key);
 
   final TextEditingController textEditingController;
@@ -18,15 +19,23 @@ class CustomFormWidget extends StatelessWidget {
   final VoidCallback? onSuffixTap;
   final IconData? suffixIcon;
   final TextInputType keyboardType;
+  final String errorMessage;
 
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: textEditingController,
       obscureText: isObscure,
       cursorColor: kPrimaryColor,
       keyboardType: keyboardType,
+      validator: (value) {
+        if(value == null || value.isEmpty){
+          return errorMessage;
+        } else {
+          return null;
+        }
+      },
       decoration: InputDecoration(
         suffixIcon: GestureDetector(
           onTap: onSuffixTap,

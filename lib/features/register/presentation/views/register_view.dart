@@ -1,9 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:xedu/features/login/presentation/views/login_view.dart';
+import 'package:xedu/features/register/domain/usecase/register_usecase.dart';
+import 'package:xedu/features/register/presentation/bloc/register_bloc.dart';
 import 'package:xedu/features/register/presentation/bloc/sekolah_bloc.dart';
 import 'package:xedu/features/register/presentation/widget/dropdown_sekolah_widget.dart';
+import 'package:xedu/features/report/widgets/dialog_widget.dart';
 import 'package:xedu/injection_container.dart';
 import 'package:xedu/themes/color.dart';
 import 'package:xedu/widgets/form_widget.dart';
@@ -14,8 +18,15 @@ class RegisterView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<SekolahBloc>()..add(GetSekolahEvent()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => sl<RegisterBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<SekolahBloc>()..add(GetSekolahEvent()),
+        ),
+      ],
       child: RegisterScreen(),
     );
   }
@@ -39,8 +50,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool? isPria = false;
   bool? isWanita = false;
   String? gender;
-  List<String> list = <String>['One', 'Two', 'Three', 'Four'];
-  late String? dropdownValue;
+  late int? dropdownValue;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -58,89 +69,110 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
-        children: [
-          const SizedBox(height: 48),
-          headingImage(),
-          const SizedBox(
-            height: 16,
-          ),
-          textTitle(),
-          const SizedBox(
-            height: 18,
-          ),
-          subtitleWidget(),
-          const SizedBox(height: 21),
-          textfieldEmailWidget(),
-          const SizedBox(
-            height: 8,
-          ),
-          smolTextWidget(),
-          const SizedBox(
-            height: 18,
-          ),
-          textfieldNamaWidget(),
-          const SizedBox(
-            height: 21,
-          ),
-          textfieldUmurWidget(),
-          const SizedBox(
-            height: 21,
-          ),
-          textfieldAlamatWidget(),
-          const SizedBox(
-            height: 21,
-          ),
-          textfieldTeleponWidget(),
-          const SizedBox(
-            height: 21,
-          ),
-          BlocBuilder<SekolahBloc, SekolahState>(
-            builder: (context, state) {
-              if(state is SekolahLoaded){
-                return DropdownSekolahWidget(
-                  data: state.sekolahData,
-                  dropdownValue: dropdownValue,
-                  onChanged: (value) {
-                    setState(() {
-                      dropdownValue = value;
-                    });
-                  },
-                );
-              } else if (state is SekolahFailed){
-                return Container();
-              } else {
-                return Container();
-              }
-            },
-          ),
-          const SizedBox(
-            height: 28,
-          ),
-          textfieldPasswordWidget(),
-          const SizedBox(
-            height: 28,
-          ),
-          rowGenderWidget(),
-          const SizedBox(
-            height: 24,
-          ),
-          elevatedButtonRegister(context),
-          const SizedBox(
-            height: 24,
-          ),
-          textLoginWidget()
-        ],
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
+          children: [
+            const SizedBox(height: 48),
+            headingImage(),
+            const SizedBox(
+              height: 16,
+            ),
+            textTitle(),
+            const SizedBox(
+              height: 18,
+            ),
+            subtitleWidget(),
+            const SizedBox(height: 21),
+            textfieldEmailWidget(),
+            const SizedBox(
+              height: 8,
+            ),
+            smolTextWidget(),
+            const SizedBox(
+              height: 18,
+            ),
+            textfieldNamaWidget(),
+            const SizedBox(
+              height: 21,
+            ),
+            textfieldUmurWidget(),
+            const SizedBox(
+              height: 21,
+            ),
+            textfieldAlamatWidget(),
+            const SizedBox(
+              height: 21,
+            ),
+            textfieldTeleponWidget(),
+            const SizedBox(
+              height: 21,
+            ),
+            blocBuilderSekolah(),
+            const SizedBox(
+              height: 28,
+            ),
+            textfieldPasswordWidget(),
+            const SizedBox(
+              height: 28,
+            ),
+            rowGenderWidget(),
+            const SizedBox(
+              height: 24,
+            ),
+            blocListenerRegisterBtn(context),
+            const SizedBox(
+              height: 24,
+            ),
+            textLoginWidget()
+          ],
+        ),
       ),
     );
   }
 
-    CustomFormWidget textfieldLoadingWidget() {
-    return CustomFormWidget(
-      textEditingController: telpEditingController,
-      hintText: 'Sekolah',
-      keyboardType: TextInputType.number,
+  BlocListener<RegisterBloc, RegisterState> blocListenerRegisterBtn(BuildContext context) {
+    return BlocListener<RegisterBloc, RegisterState>(
+      listener: (context, state) {
+        if(state is RegisterSuccess){
+          Navigator.pop(context);
+          Fluttertoast.showToast(msg: 'Akun berhasil dibuat silahkan login!');
+        } else if (state is RegisterFailed){
+          showDialog(
+            context: context, 
+            builder: (_) => ErrorDialog(errorValue: state.message,),
+          );
+        } else {
+          showDialog(
+            context: context, 
+            builder: (_) => LoadingDialog(),
+          );
+        }
+      },
+      child: elevatedButtonRegister(context),
+    );
+  }
+
+  BlocBuilder<SekolahBloc, SekolahState> blocBuilderSekolah() {
+    return BlocBuilder<SekolahBloc, SekolahState>(
+      builder: (context, state) {
+        if (state is SekolahLoaded) {
+          return DropdownSekolahWidget(
+            data: state.sekolahData,
+            dropdownValue: dropdownValue,
+            onChanged: (value) {
+              setState(() {
+                dropdownValue = value;
+              });
+            },
+          );
+        } else if (state is SekolahFailed) {
+          return Container();
+        } else {
+          return Container();
+        }
+      },
     );
   }
 
@@ -196,7 +228,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          if (_formKey.currentState!.validate()) {
+            context.read<RegisterBloc>().add(
+              PostRegistrationEvent(
+                params: RegisterParams(
+                  email: emailEditingController.text,
+                  namaLengkap: namaEditingController.text,
+                  umur: int.parse(umurEditingController.text),
+                  alamat: alamatEditingController.text,
+                  noTelp: telpEditingController.text,
+                  sekolahId: dropdownValue!,
+                  jenisKelamin: gender!,
+                  password: passwordEditingController.text
+                )
+              )
+            );
+          }
+        },
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,
           backgroundColor: kPrimaryColor,
@@ -284,6 +333,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           isObscure = !isObscure;
         });
       },
+      errorMessage: 'password tidak boleh kosong',
     );
   }
 
@@ -292,6 +342,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       textEditingController: telpEditingController,
       hintText: 'No Telepon',
       keyboardType: TextInputType.number,
+      errorMessage: 'no telepon tidak boleh kosong',
     );
   }
 
@@ -299,6 +350,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return CustomFormWidget(
       textEditingController: alamatEditingController,
       hintText: 'Alamat',
+      errorMessage: 'alamat tidak boleh kosong',
     );
   }
 
@@ -307,6 +359,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       textEditingController: umurEditingController,
       hintText: 'Umur',
       keyboardType: TextInputType.number,
+      errorMessage: 'umur tidak boleh kosong',
     );
   }
 
@@ -314,12 +367,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return CustomFormWidget(
       textEditingController: namaEditingController,
       hintText: 'Nama Lengkap',
+      errorMessage: 'nama tidak boleh kosong',
     );
   }
 
   CustomTextWidget smolTextWidget() {
     return const CustomTextWidget(
-      text: 'Pastika email yang kamu daftgarkan adalah valid',
+      text: 'Pastika email yang kamu daftarkan adalah valid',
       size: 10,
       color: Color.fromRGBO(92, 92, 92, 1),
     );
@@ -330,6 +384,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       textEditingController: emailEditingController,
       hintText: 'Email',
       keyboardType: TextInputType.emailAddress,
+      errorMessage: 'email tidak boleh kosong',
     );
   }
 

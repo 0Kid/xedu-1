@@ -35,6 +35,7 @@ class _LoginPageState extends State<LoginPage> {
   late TextEditingController passwordEditingController;
   bool isObscure = true;
   bool? isBoxChecked = false;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -65,35 +66,38 @@ class _LoginPageState extends State<LoginPage> {
             divider(),
             Padding(
               padding: const EdgeInsets.only(left: 18, right: 18, top: 21),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 21),
-                    child: titleText(),
-                  ),
-                  subtitleWidget(),
-                  const SizedBox(
-                    height: 21,
-                  ),
-                  textfieldEmailWidget(),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  textFieldPasswordWidget(),
-                  const SizedBox(
-                    height: 21,
-                  ),
-                  rowRememberMe(),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  _blocListernerLogin(context),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  registerText(),
-                ],
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 21),
+                      child: titleText(),
+                    ),
+                    subtitleWidget(),
+                    const SizedBox(
+                      height: 21,
+                    ),
+                    textfieldEmailWidget(),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    textFieldPasswordWidget(),
+                    const SizedBox(
+                      height: 21,
+                    ),
+                    rowRememberMe(),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    _blocListernerLogin(context),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    registerText(),
+                  ],
+                ),
               ),
             )
           ],
@@ -178,8 +182,11 @@ class _LoginPageState extends State<LoginPage> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: ElevatedButton(
-        onPressed: () => context.read<LoginBloc>().add(PostLoginEvent(email: emailEditingController.text, password: passwordEditingController.text)
-        ),
+        onPressed: () {
+          if(_formKey.currentState!.validate()){
+            context.read<LoginBloc>().add(PostLoginEvent(email: emailEditingController.text, password: passwordEditingController.text));
+          }
+        },
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,
           backgroundColor: kPrimaryColor,
@@ -237,6 +244,7 @@ class _LoginPageState extends State<LoginPage> {
           isObscure = !isObscure;
         });
       },
+      errorMessage: 'password tidak boleh kosong',
     );
   }
 
@@ -244,6 +252,7 @@ class _LoginPageState extends State<LoginPage> {
     return CustomFormWidget(
       textEditingController: emailEditingController,
       hintText: 'Email',
+      errorMessage: 'password tidak boleh kosong',
     );
   }
 
