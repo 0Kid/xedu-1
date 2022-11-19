@@ -23,10 +23,15 @@ import 'package:xedu/features/login/domain/usecases/get_user_data.dart';
 import 'package:xedu/features/login/domain/usecases/post_login.dart';
 import 'package:xedu/features/login/presentation/bloc/auth_bloc.dart';
 import 'package:xedu/features/login/presentation/bloc/login_bloc.dart';
+import 'package:xedu/features/register/data/datasource/register_remote_datasource.dart';
 import 'package:xedu/features/register/data/datasource/sekolah_remote_datasource.dart';
+import 'package:xedu/features/register/data/repositories/register_repository_impl.dart';
 import 'package:xedu/features/register/data/repositories/sekolah_repository_impl.dart';
+import 'package:xedu/features/register/domain/repositories/register_repository.dart';
 import 'package:xedu/features/register/domain/repositories/sekolah_repository.dart';
+import 'package:xedu/features/register/domain/usecase/register_usecase.dart';
 import 'package:xedu/features/register/domain/usecase/sekolah_usecase.dart';
+import 'package:xedu/features/register/presentation/bloc/register_bloc.dart';
 import 'package:xedu/features/register/presentation/bloc/sekolah_bloc.dart';
 
 final sl = GetIt.instance;
@@ -79,12 +84,20 @@ Future<void> init() async {
       )
     );
 
+    //data source
+  sl.registerLazySingleton<BannerRemoteDataSource>(() => BannerRemoteDataSourceImpl(client: sl()));
+  sl.registerLazySingleton<BannerLocalDataSource>(()=> BannerLocalDataSourceImpl(prefs: sl()));
+  sl.registerLazySingleton<NewsLocalDatasource>(() => NewsLocalDatasourceImpl(prefs: sl()));
+  sl.registerLazySingleton<NewsRemoteDataSource>(() => NewsRemoteDataSourceImpl(client: sl()));
+
   //register
   //bloc
   sl.registerFactory(() => SekolahBloc(usecase: sl()));
+  sl.registerFactory(() => RegisterBloc(usecase: sl()));
 
   //usecase
   sl.registerLazySingleton(() => GetSekolah(repository: sl()));
+  sl.registerLazySingleton(() => PostRegistration(repository: sl()));
 
   //resosiotry
   sl.registerLazySingleton<SekolahRepository>(
@@ -93,19 +106,20 @@ Future<void> init() async {
       networkInfo: sl()
     )
   );
+  sl.registerLazySingleton<RegisterRepository>(
+    () => RegisterRepositoryImpl(
+      datasource: sl(), 
+      networkInfo: sl()
+    )
+  );
 
   //datasource
   sl.registerLazySingleton<SekolahRemoteDatasource>(
     () => SekolahRemoteDatasourceImpl(client: sl())
   );
-
-
-  //data source
-  sl.registerLazySingleton<BannerRemoteDataSource>(() => BannerRemoteDataSourceImpl(client: sl()));
-  sl.registerLazySingleton<BannerLocalDataSource>(()=> BannerLocalDataSourceImpl(prefs: sl()));
-  sl.registerLazySingleton<NewsLocalDatasource>(() => NewsLocalDatasourceImpl(prefs: sl()));
-  sl.registerLazySingleton<NewsRemoteDataSource>(() => NewsRemoteDataSourceImpl(client: sl()));
-  
+  sl.registerLazySingleton<RegisterRemoteDatasource>(
+    ()=> RegisterRemoteDatasourceImpl(client: sl())
+  ); 
 
 
   //!Core
