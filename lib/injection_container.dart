@@ -33,6 +33,13 @@ import 'package:xedu/features/register/domain/usecase/register_usecase.dart';
 import 'package:xedu/features/register/domain/usecase/sekolah_usecase.dart';
 import 'package:xedu/features/register/presentation/bloc/register_bloc.dart';
 import 'package:xedu/features/register/presentation/bloc/sekolah_bloc.dart';
+import 'package:xedu/features/report/data/datasource/lapor_local_datasource.dart';
+import 'package:xedu/features/report/data/datasource/lapor_remote_datasource.dart';
+import 'package:xedu/features/report/data/repositories/lapor_repository_impl.dart';
+import 'package:xedu/features/report/domain/repositories/lapor_repository.dart';
+import 'package:xedu/features/report/domain/usecase/get_lapor_usecase.dart';
+import 'package:xedu/features/report/domain/usecase/post_lapor_usecase.dart';
+import 'package:xedu/features/report/presentation/bloc/lapor_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -120,6 +127,31 @@ Future<void> init() async {
   sl.registerLazySingleton<RegisterRemoteDatasource>(
     ()=> RegisterRemoteDatasourceImpl(client: sl())
   ); 
+
+  //lapor
+  //bloc
+  sl.registerFactory(() => LaporBloc(laporUsecase: sl(), riwayatUsecase: sl()));
+
+  //usecase
+  sl.registerLazySingleton(() => PostLapor(repository: sl()));
+  sl.registerLazySingleton(() => GetRiwayatLapor(repository: sl()));
+
+  //repository
+  sl.registerLazySingleton<LaporRepository>(
+    () => LaporRepositoryImpl(
+      remoteDatasource: sl(),
+      localDatasource: sl(),
+      networkInfo: sl()
+    )
+  );
+
+  //datasource
+  sl.registerLazySingleton<LaporRemoteDatasource>(
+    () => LaporRemoteDatasourceImpl(client: sl())
+  );
+  sl.registerLazySingleton<LaporLocalDatasource>(
+    () => LaporLocalDatasourceImpl(prefs: sl())
+  );
 
 
   //!Core

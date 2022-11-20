@@ -1,7 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:xedu/features/report/presentation/widgets/custom_elevated_button_widget.dart';
-import 'package:xedu/features/report/presentation/widgets/radio_with_label_widget.dart';
-import 'package:xedu/features/report/presentation/widgets/textfield_with_label_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xedu/features/login/data/datasources/login_local_data_source.dart';
+import 'package:xedu/features/login/data/model/user_model.dart';
+import 'package:xedu/features/login/domain/entity/user.dart';
+import 'package:xedu/features/report/domain/usecase/post_lapor_usecase.dart';
+import 'package:xedu/features/report/presentation/bloc/lapor_bloc.dart';
+import 'package:xedu/features/report/presentation/views/riwayat_lapor_view.dart';
+import 'package:xedu/features/widgets/custom_elevated_button_widget.dart';
+import 'package:xedu/features/widgets/dialog_widget.dart';
+import 'package:xedu/features/widgets/radio_with_label_widget.dart';
+import 'package:xedu/features/widgets/textfield_with_label_widget.dart';
+import 'package:xedu/injection_container.dart';
 import 'package:xedu/themes/color.dart';
 import 'package:xedu/widgets/text_widget.dart';
 
@@ -10,7 +22,10 @@ class ReportView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ReportScreen();
+    return BlocProvider(
+      create: (context) => sl<LaporBloc>(),
+      child: ReportScreen(),
+    );
   }
 }
 
@@ -22,7 +37,32 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
-  String groupValue = '';
+  late bool groupValue;
+  late SharedPreferences prefs;
+  late UserData user;
+  late TextEditingController pelakuTextEditingController;
+  late TextEditingController tglEditingController;
+  late TextEditingController hubunganEditingController;
+  late TextEditingController uraianEditingController;
+  late TextEditingController lokasiEditingController;
+
+  void _getUserData() async {
+    user =
+        UserDataModel.fromJson(jsonDecode(prefs.getString(CACHED_USER_DATA)!));
+  }
+
+  @override
+  void initState() {
+    groupValue = false;
+    prefs = sl<SharedPreferences>();
+    _getUserData();
+    pelakuTextEditingController = TextEditingController();
+    tglEditingController = TextEditingController();
+    hubunganEditingController = TextEditingController();
+    uraianEditingController = TextEditingController();
+    lokasiEditingController = TextEditingController();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,26 +96,95 @@ class _ReportScreenState extends State<ReportScreen> {
                 weight: FontWeight.w600,
                 size: 23,
               ),
-              const SizedBox(height: 36,),
-              const TextFieldWithLabelWidget(
-                label: 'Nama Pelaku: ',
+              const SizedBox(
+                height: 36,
               ),
-              const SizedBox(height: 15,),
-              const TextFieldWithLabelWidget(label: 'Tangal kejadian:'),
-              const SizedBox(height: 15,),
-              const TextFieldWithLabelWidget(label: 'Hubunga degan pelaku:'),
-              const SizedBox(height: 15,),
-              const TextFieldWithLabelWidget(label: 'Peristiwa yang terjadi'),
-              const SizedBox(height: 15,),
+              TextFieldWithLabelWidget(
+                label: 'Nama Pelaku: ',
+                controller: pelakuTextEditingController,
+                errorMessage: 'nama pelaku tidak boleh kosong',
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              TextFieldWithLabelWidget(
+                label: 'Lokasi kejadian',
+                controller: lokasiEditingController,
+                errorMessage: 'lokasi tidak boleh kosong'
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              TextFieldWithLabelWidget(
+                label: 'Tangal kejadian:',
+                controller: tglEditingController,
+                errorMessage: 'Tanggal tidak boleh kosong',
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              TextFieldWithLabelWidget(
+                label: 'Hubunga degan pelaku:',
+                controller: hubunganEditingController,
+                errorMessage: 'hubungan tidak boleh kosong',
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              TextFieldWithLabelWidget(
+                label: 'Peristiwa yang terjadi',
+                controller: uraianEditingController,
+                errorMessage: 'Koronologi tidak boleh kosong',
+              ),
+              const SizedBox(
+                height: 15,
+              ),
               radioTitle(),
-              const SizedBox(height: 8,),
+              const SizedBox(
+                height: 8,
+              ),
               radioAnonim(),
-              const SizedBox(height: 28,),
-              rowButtoWidget()
+              const SizedBox(
+                height: 28,
+              ),
+              blocListenerLapor()
             ],
           ),
         ),
       ),
+    );
+  }
+
+  BlocListener<LaporBloc, LaporState> blocListenerLapor() {
+    return BlocListener<LaporBloc, LaporState>(
+      listener: (context, state) {
+        if(state is LaporSuccess) {
+          showDialog(
+            context: context, 
+            builder: (_)=> ErrorDialog(errorValue: 'laporan berhasil dikirim')
+          ).then((_) {
+            setState(() {
+              pelakuTextEditingController.clear();
+              lokasiEditingController.clear();
+              tglEditingController.clear();
+              hubunganEditingController.clear();
+              uraianEditingController.clear();
+            });
+            Navigator.pop(context);
+          });
+        } else if (state is LaporFailed) {
+          showDialog(
+            context: context, 
+            builder: (_) => ErrorDialog(errorValue: state.message)
+          );
+        } else {
+          showDialog(
+            context: context, 
+            builder: (_) => LoadingDialog(),
+          );
+        }
+      },
+      child: rowButtoWidget(),
     );
   }
 
@@ -89,9 +198,7 @@ class _ReportScreenState extends State<ReportScreen> {
           text: 'Batal',
           textColor: kPrimaryColor,
           shadowColor: kPrimaryColor.withOpacity(0.16),
-          onTap: () {
-            
-          },
+          onTap: () {},
         ),
         CustomElevatedButtonWidget(
           backgroundColor: kPrimaryColor,
@@ -100,7 +207,21 @@ class _ReportScreenState extends State<ReportScreen> {
           textColor: Colors.white,
           shadowColor: kPrimaryColor.withOpacity(0.16),
           onTap: () {
-            
+            context.read<LaporBloc>().add(
+              PostLaporEvent(
+                params: LaporParams(
+                  namaPelaku: pelakuTextEditingController.text,
+                  tempatKejadian: lokasiEditingController.text,
+                  tanggalKejadian: tglEditingController.text,
+                  hubungan: hubunganEditingController.text,
+                  uraian: uraianEditingController.text,
+                  isAnon: groupValue,
+                  authId: user.data.id!,
+                  sekoalhId: user.data.sekolah!.id,
+                  status: 'SUBMITED'
+                )
+              )
+            );
           },
         ),
       ],
@@ -116,6 +237,20 @@ class _ReportScreenState extends State<ReportScreen> {
         weight: FontWeight.w600,
         size: 24,
       ),
+      actions: [
+        IconButton(
+          onPressed: () {
+            Navigator.push(
+              context, 
+              MaterialPageRoute(builder: (_)=> BlocProvider(
+                create: (context) => sl<LaporBloc>()..add(GetLaporEvent(auhtId: user.data.id.toString())),
+                child: RiwayatLaporView(),
+              ))
+            );
+          }, 
+          icon: Icon(Icons.history)
+        )
+      ],
     );
   }
 
@@ -123,14 +258,24 @@ class _ReportScreenState extends State<ReportScreen> {
     return Row(
       children: [
         RadioWithLabelWidget(
-          value: 'Ya', 
-          label: 'Ya', 
+          value: true,
+          label: 'Ya',
           groupValue: groupValue,
+          onTap: (value) {
+            setState(() {
+              groupValue = value!;
+            });
+          },
         ),
         RadioWithLabelWidget(
-          value: 'Tidak', 
-          label: 'Tidak', 
+          value: false,
+          label: 'Tidak',
           groupValue: groupValue,
+          onTap: (value) {
+            setState(() {
+              groupValue = value!;
+            });
+          },
         ),
       ],
     );

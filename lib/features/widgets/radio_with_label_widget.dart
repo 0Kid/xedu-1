@@ -11,10 +11,10 @@ class RadioWithLabelWidget extends StatelessWidget {
     this.onTap,
   });
 
-  final String value;
+  final bool value;
   final String label;
-  final String groupValue;
-  final void Function(String?)? onTap;
+  final bool groupValue;
+  final void Function(bool?)? onTap;
 
   @override
   Widget build(BuildContext context) {
