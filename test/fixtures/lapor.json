@@ -1,0 +1,17 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "nama_pelaku": "namaPelaku",
+            "tempat_kejadian": "tempatKejadian",
+            "tanggal_kejadian": "22 november 2022",
+            "hubungan": "hubungan",
+            "uraian": "uraian",
+            "authId": 1,
+            "sekolahId": 1,
+            "status": "SUBMITTED",
+            "isAnonym": false,
+            "createdAt": "2022-11-20T08:28:26.304Z"
+        }
+    ]
+}
