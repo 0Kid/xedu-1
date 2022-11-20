@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:xedu/features/report/widgets/custom_elevated_button_widget.dart';
-import 'package:xedu/features/report/widgets/radio_with_label_widget.dart';
-import 'package:xedu/features/report/widgets/textfield_with_label_widget.dart';
+import 'package:xedu/features/report/presentation/widgets/custom_elevated_button_widget.dart';
+import 'package:xedu/features/report/presentation/widgets/radio_with_label_widget.dart';
+import 'package:xedu/features/report/presentation/widgets/textfield_with_label_widget.dart';
 import 'package:xedu/themes/color.dart';
 import 'package:xedu/widgets/text_widget.dart';
 
