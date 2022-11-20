@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xedu/features/login/presentation/bloc/login_bloc.dart';
 import 'package:xedu/features/login/presentation/views/auth_view.dart';
 import 'package:xedu/features/register/presentation/views/register_view.dart';
-import 'package:xedu/features/report/widgets/dialog_widget.dart';
+import 'package:xedu/features/widgets/dialog_widget.dart';
 import 'package:xedu/injection_container.dart';
 import 'package:xedu/themes/color.dart';
 import 'package:xedu/widgets/form_widget.dart';

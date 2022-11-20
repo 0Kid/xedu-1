@@ -7,7 +7,7 @@ import 'package:xedu/features/register/domain/usecase/register_usecase.dart';
 import 'package:xedu/features/register/presentation/bloc/register_bloc.dart';
 import 'package:xedu/features/register/presentation/bloc/sekolah_bloc.dart';
 import 'package:xedu/features/register/presentation/widget/dropdown_sekolah_widget.dart';
-import 'package:xedu/features/report/widgets/dialog_widget.dart';
+import 'package:xedu/features/widgets/dialog_widget.dart';
 import 'package:xedu/injection_container.dart';
 import 'package:xedu/themes/color.dart';
 import 'package:xedu/widgets/form_widget.dart';
