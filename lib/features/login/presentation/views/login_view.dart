@@ -252,7 +252,7 @@ class _LoginPageState extends State<LoginPage> {
     return CustomFormWidget(
       textEditingController: emailEditingController,
       hintText: 'Email',
-      errorMessage: 'password tidak boleh kosong',
+      errorMessage: 'email tidak boleh kosong',
     );
   }
 
