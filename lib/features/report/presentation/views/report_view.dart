@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xedu/features/login/data/datasources/login_local_data_source.dart';
 import 'package:xedu/features/login/data/model/user_model.dart';
@@ -9,6 +10,7 @@ import 'package:xedu/features/login/domain/entity/user.dart';
 import 'package:xedu/features/report/domain/usecase/post_lapor_usecase.dart';
 import 'package:xedu/features/report/presentation/bloc/lapor_bloc.dart';
 import 'package:xedu/features/report/presentation/views/riwayat_lapor_view.dart';
+import 'package:xedu/features/report/presentation/views/success_report_view.dart';
 import 'package:xedu/features/widgets/custom_elevated_button_widget.dart';
 import 'package:xedu/features/widgets/dialog_widget.dart';
 import 'package:xedu/features/widgets/radio_with_label_widget.dart';
@@ -106,6 +108,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   label: 'Nama Pelaku: ',
                   controller: pelakuTextEditingController,
                   errorMessage: 'nama pelaku tidak boleh kosong',
+                  hintText: 'nama pelaku pelecehan',
                 ),
                 const SizedBox(
                   height: 15,
@@ -113,15 +116,32 @@ class _ReportScreenState extends State<ReportScreen> {
                 TextFieldWithLabelWidget(
                   label: 'Lokasi kejadian',
                   controller: lokasiEditingController,
-                  errorMessage: 'lokasi tidak boleh kosong'
+                  errorMessage: 'lokasi tidak boleh kosong',
+                  hintText: 'lokasi terjadinya pelecehan',
                 ),
                 const SizedBox(
                   height: 15,
                 ),
-                TextFieldWithLabelWidget(
-                  label: 'Tangal kejadian:',
-                  controller: tglEditingController,
-                  errorMessage: 'Tanggal tidak boleh kosong',
+                GestureDetector(
+                  child: TextFieldWithLabelWidget(
+                    label: 'Tangal kejadian:',
+                    controller: tglEditingController,
+                    errorMessage: 'Tanggal tidak boleh kosong',
+                    isEnabled: false,
+                    hintText: 'tanggal kejadian pelecehan',
+                  ),
+                  onTap: () async {
+                    DateTime? selectedDate = await showDatePicker(
+                      context: context, 
+                      initialDate: DateTime.now(), 
+                      firstDate: DateTime(2010), 
+                      lastDate: DateTime(2030),
+                      locale: Locale('id', 'ID'),
+                    );
+                    if(selectedDate != null) {
+                      tglEditingController.text = DateFormat('dd MMMM yyyy').format(selectedDate);
+                    }
+                  },
                 ),
                 const SizedBox(
                   height: 15,
@@ -130,6 +150,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   label: 'Hubunga degan pelaku:',
                   controller: hubunganEditingController,
                   errorMessage: 'hubungan tidak boleh kosong',
+                  hintText: 'teman, saudara, guru',
                 ),
                 const SizedBox(
                   height: 15,
@@ -138,6 +159,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   label: 'Peristiwa yang terjadi',
                   controller: uraianEditingController,
                   errorMessage: 'Koronologi tidak boleh kosong',
+                  hintText: 'Kronologi peristiwa pelecehan',
                 ),
                 const SizedBox(
                   height: 15,
@@ -163,19 +185,18 @@ class _ReportScreenState extends State<ReportScreen> {
     return BlocListener<LaporBloc, LaporState>(
       listener: (context, state) {
         if(state is LaporSuccess) {
-          showDialog(
-            context: context, 
-            builder: (_)=> ErrorDialog(errorValue: 'laporan berhasil dikirim')
-          ).then((_) {
-            setState(() {
-              pelakuTextEditingController.clear();
-              lokasiEditingController.clear();
-              tglEditingController.clear();
-              hubunganEditingController.clear();
-              uraianEditingController.clear();
-            });
-            Navigator.pop(context);
+          setState(() {
+            pelakuTextEditingController.clear();
+            lokasiEditingController.clear();
+            tglEditingController.clear();
+            hubunganEditingController.clear();
+            uraianEditingController.clear();
           });
+          Navigator.pop(context);
+          Navigator.push(
+            context, 
+            MaterialPageRoute(builder: (_) => SuccessReportView())
+          );
         } else if (state is LaporFailed) {
           showDialog(
             context: context, 
@@ -202,7 +223,14 @@ class _ReportScreenState extends State<ReportScreen> {
           text: 'Batal',
           textColor: kPrimaryColor,
           shadowColor: kPrimaryColor.withOpacity(0.16),
-          onTap: () {},
+          onTap: () {
+            pelakuTextEditingController.clear();
+            lokasiEditingController.clear();
+            tglEditingController.clear();
+            hubunganEditingController.clear();
+            uraianEditingController.clear();
+            _formReportKey.currentState!.reset();
+          },
         ),
         CustomElevatedButtonWidget(
           backgroundColor: kPrimaryColor,
