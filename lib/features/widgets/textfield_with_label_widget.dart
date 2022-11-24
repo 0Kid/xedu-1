@@ -6,12 +6,16 @@ class TextFieldWithLabelWidget extends StatelessWidget {
     Key? key, 
     required this.label,
     required this.controller,
-    required this.errorMessage
+    required this.errorMessage,
+    this.isEnabled = true,
+    required this.hintText
   }) : super(key: key);
 
   final String label;
   final TextEditingController controller;
   final String errorMessage;
+  final bool isEnabled;
+  final String hintText;
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +29,21 @@ class TextFieldWithLabelWidget extends StatelessWidget {
           return null;
         }
       },
+      keyboardType: TextInputType.multiline,
+      minLines: 1,
+      maxLines: 5,
+      enabled: isEnabled,
       decoration: InputDecoration(
         label: Text(label),
+        hintText: hintText,
         labelStyle: const TextStyle(
           fontWeight: FontWeight.w500,
           fontSize: 15,
           color: Colors.black,
+        ),
+        hintStyle: const TextStyle(
+          fontWeight: FontWeight.w400,
+          fontSize: 11,
         ),
         enabledBorder: const UnderlineInputBorder(
           borderSide: BorderSide(
