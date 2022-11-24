@@ -45,6 +45,7 @@ class _ReportScreenState extends State<ReportScreen> {
   late TextEditingController hubunganEditingController;
   late TextEditingController uraianEditingController;
   late TextEditingController lokasiEditingController;
+  final _formReportKey = GlobalKey<FormState>();
 
   void _getUserData() async {
     user =
@@ -84,71 +85,74 @@ class _ReportScreenState extends State<ReportScreen> {
             ],
             borderRadius: BorderRadius.circular(15),
           ),
-          child: Column(
-            children: [
-              const CustomTextWidget(
-                text: 'Pelaporan tindak',
-                weight: FontWeight.w600,
-                size: 23,
-              ),
-              const CustomTextWidget(
-                text: 'kekerasan seksual',
-                weight: FontWeight.w600,
-                size: 23,
-              ),
-              const SizedBox(
-                height: 36,
-              ),
-              TextFieldWithLabelWidget(
-                label: 'Nama Pelaku: ',
-                controller: pelakuTextEditingController,
-                errorMessage: 'nama pelaku tidak boleh kosong',
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              TextFieldWithLabelWidget(
-                label: 'Lokasi kejadian',
-                controller: lokasiEditingController,
-                errorMessage: 'lokasi tidak boleh kosong'
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              TextFieldWithLabelWidget(
-                label: 'Tangal kejadian:',
-                controller: tglEditingController,
-                errorMessage: 'Tanggal tidak boleh kosong',
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              TextFieldWithLabelWidget(
-                label: 'Hubunga degan pelaku:',
-                controller: hubunganEditingController,
-                errorMessage: 'hubungan tidak boleh kosong',
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              TextFieldWithLabelWidget(
-                label: 'Peristiwa yang terjadi',
-                controller: uraianEditingController,
-                errorMessage: 'Koronologi tidak boleh kosong',
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              radioTitle(),
-              const SizedBox(
-                height: 8,
-              ),
-              radioAnonim(),
-              const SizedBox(
-                height: 28,
-              ),
-              blocListenerLapor()
-            ],
+          child: Form(
+            key: _formReportKey,
+            child: Column(
+              children: [
+                const CustomTextWidget(
+                  text: 'Pelaporan tindak',
+                  weight: FontWeight.w600,
+                  size: 23,
+                ),
+                const CustomTextWidget(
+                  text: 'kekerasan seksual',
+                  weight: FontWeight.w600,
+                  size: 23,
+                ),
+                const SizedBox(
+                  height: 36,
+                ),
+                TextFieldWithLabelWidget(
+                  label: 'Nama Pelaku: ',
+                  controller: pelakuTextEditingController,
+                  errorMessage: 'nama pelaku tidak boleh kosong',
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                TextFieldWithLabelWidget(
+                  label: 'Lokasi kejadian',
+                  controller: lokasiEditingController,
+                  errorMessage: 'lokasi tidak boleh kosong'
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                TextFieldWithLabelWidget(
+                  label: 'Tangal kejadian:',
+                  controller: tglEditingController,
+                  errorMessage: 'Tanggal tidak boleh kosong',
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                TextFieldWithLabelWidget(
+                  label: 'Hubunga degan pelaku:',
+                  controller: hubunganEditingController,
+                  errorMessage: 'hubungan tidak boleh kosong',
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                TextFieldWithLabelWidget(
+                  label: 'Peristiwa yang terjadi',
+                  controller: uraianEditingController,
+                  errorMessage: 'Koronologi tidak boleh kosong',
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                radioTitle(),
+                const SizedBox(
+                  height: 8,
+                ),
+                radioAnonim(),
+                const SizedBox(
+                  height: 28,
+                ),
+                blocListenerLapor()
+              ],
+            ),
           ),
         ),
       ),
@@ -207,21 +211,23 @@ class _ReportScreenState extends State<ReportScreen> {
           textColor: Colors.white,
           shadowColor: kPrimaryColor.withOpacity(0.16),
           onTap: () {
-            context.read<LaporBloc>().add(
-              PostLaporEvent(
-                params: LaporParams(
-                  namaPelaku: pelakuTextEditingController.text,
-                  tempatKejadian: lokasiEditingController.text,
-                  tanggalKejadian: tglEditingController.text,
-                  hubungan: hubunganEditingController.text,
-                  uraian: uraianEditingController.text,
-                  isAnon: groupValue,
-                  authId: user.data.id!,
-                  sekoalhId: user.data.sekolah!.id,
-                  status: 'SUBMITED'
+            if(_formReportKey.currentState!.validate()) {
+              context.read<LaporBloc>().add(
+                PostLaporEvent(
+                  params: LaporParams(
+                    namaPelaku: pelakuTextEditingController.text,
+                    tempatKejadian: lokasiEditingController.text,
+                    tanggalKejadian: tglEditingController.text,
+                    hubungan: hubunganEditingController.text,
+                    uraian: uraianEditingController.text,
+                    isAnon: groupValue,
+                    authId: user.data.id!,
+                    sekoalhId: user.data.sekolah!.id,
+                    status: 'SUBMITED'
+                  )
                 )
-              )
-            );
+              );
+            }
           },
         ),
       ],
