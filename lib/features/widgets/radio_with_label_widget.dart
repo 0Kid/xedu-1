@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:xedu/themes/color.dart';
 import 'package:xedu/widgets/text_widget.dart';
 
 class RadioWithLabelWidget extends StatelessWidget {
@@ -30,6 +31,7 @@ class RadioWithLabelWidget extends StatelessWidget {
         visualDensity: VisualDensity.compact,
         leading: Radio(
           value: value, 
+          activeColor: kPrimaryColor,
           groupValue: groupValue, 
           onChanged: onTap,
         ),
