@@ -139,7 +139,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       locale: Locale('id', 'ID'),
                     );
                     if(selectedDate != null) {
-                      tglEditingController.text = DateFormat('dd MMMM yyyy').format(selectedDate);
+                      tglEditingController.text = DateFormat('dd MMMM yyyy', 'id').format(selectedDate);
                     }
                   },
                 ),
