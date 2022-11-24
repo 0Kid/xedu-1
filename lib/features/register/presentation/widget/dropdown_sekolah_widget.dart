@@ -30,7 +30,7 @@ class DropdownSekolahWidget extends StatelessWidget {
         child: DropdownButton(
           items: data.sekolah
             .map<DropdownMenuItem<int>>(
-                (value) => DropdownMenuItem<int>(value: value.id, child: Text(value.namaSekolah))
+                (value) => DropdownMenuItem<int>(value: value.id, child: Text(value.namaSekolah!))
             )
             .toList(),
           onChanged: onChanged,

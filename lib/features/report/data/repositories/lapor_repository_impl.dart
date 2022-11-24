@@ -9,6 +9,7 @@ import 'package:dartz/dartz.dart';
 import 'package:xedu/features/report/domain/repositories/lapor_repository.dart';
 import 'package:xedu/features/report/domain/usecase/get_lapor_usecase.dart';
 import 'package:xedu/features/report/domain/usecase/post_lapor_usecase.dart';
+import 'package:xedu/features/report/domain/usecase/update_status_lapor_usecase.dart';
 
 class LaporRepositoryImpl extends LaporRepository {
   final LaporRemoteDatasource remoteDatasource;
@@ -50,6 +51,39 @@ class LaporRepositoryImpl extends LaporRepository {
       } on ServerException {
         return Left(ServerFailure());
       } 
+    } else {
+      return Left(ServerFailure());
+    }
+  }
+  
+  @override
+  Future<Either<Failure, Lapor>>? getRiwayatLaporSekolah(String sekolahId) async {
+    if(await networkInfo.isConnected){
+      try {
+        final response = await remoteDatasource.getRemoteSekolahLapor(RiwayatLaporParams(authId: sekolahId));
+        return Right(response!);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      try {
+        final cachedData = await localDatasource.getLastRiwayatLapor();
+        return Right(cachedData!);
+      } on CacheException {
+        return Left(CacheFailure());
+      }
+    }
+  }
+
+  @override
+  Future<Either<Failure, UpdateStatus>>? updateStatusLaporan(String laporanId, String status) async {
+    if(await networkInfo.isConnected) {
+      try {
+        final result = await remoteDatasource.updataStatusLaporRemote(StatusParams(laporanId: laporanId, status: status));
+        return Right(result!);    
+      } on ServerException {
+        return Left(ServerFailure());
+      }  
     } else {
       return Left(ServerFailure());
     }

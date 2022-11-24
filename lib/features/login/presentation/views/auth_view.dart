@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:xedu/features/home/presentation/views/home_admin_view.dart';
 import 'package:xedu/features/login/presentation/bloc/auth_bloc.dart';
 import 'package:xedu/features/login/presentation/views/login_view.dart';
 import 'package:xedu/features/navigation_bar/views/navigation_bar_view.dart';
@@ -25,7 +26,11 @@ class AuthPage extends StatelessWidget {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         if(state is Authorized){
-          return NavigationBarView();
+          if(state.user.data.email == null){
+            return HomeAdminView();
+          } else {
+            return NavigationBarView();
+          }
         } else if(state is Unauthorized){
           return LoginView();
         } else {

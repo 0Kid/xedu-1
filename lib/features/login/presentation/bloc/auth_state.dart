@@ -12,7 +12,7 @@ class AuthInitial extends AuthState {}
 class Authorized extends AuthState {
   final UserData user;
 
-  Authorized(this.user);
+  const Authorized(this.user);
 }
 
 class Unauthorized extends AuthState {}

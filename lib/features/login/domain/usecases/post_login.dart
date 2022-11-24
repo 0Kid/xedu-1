@@ -16,6 +16,20 @@ class PostLogin extends UseCase<UserData, Params>{
   }
 }
 
+class PostLoginAdmin extends UseCase<UserData, Params>{
+  final LoginRepository repository;
+
+  PostLoginAdmin({
+    required this.repository
+  });
+
+  @override
+  Future<Either<Failure, UserData>?> call(Params params) async {
+    return await repository.postLoginAdmin(params.email, params.password);
+  }
+  
+}
+
 class Params extends Equatable {
   const Params({
     required this.email, 

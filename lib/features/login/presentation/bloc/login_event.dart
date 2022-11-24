@@ -11,5 +11,12 @@ class PostLoginEvent extends LoginEvent {
   final String email;
   final String password;
 
-  PostLoginEvent({required this.email, required this.password});
+  const PostLoginEvent({required this.email, required this.password});
+}
+
+class PostLoginAdminEvent extends LoginEvent {
+  final String nohp;
+  final String password;
+
+  const PostLoginAdminEvent({required this.nohp, required this.password});
 }

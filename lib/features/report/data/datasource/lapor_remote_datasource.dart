@@ -1,20 +1,22 @@
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:http/http.dart';
 import 'package:xedu/core/error/exception.dart';
 import 'package:xedu/features/register/data/model/register_model.dart';
 import 'package:xedu/features/report/data/model/lapor_model.dart';
 import 'package:xedu/features/report/domain/usecase/get_lapor_usecase.dart';
 import 'package:xedu/features/report/domain/usecase/post_lapor_usecase.dart';
+import 'package:xedu/features/report/domain/usecase/update_status_lapor_usecase.dart';
 import 'package:xedu/utils/constant.dart';
 
 abstract class LaporRemoteDatasource {
   Future<RegisterModel>? postRemoteLapor(LaporParams params);
   Future<LaporModel>? getRemoteLapor(RiwayatLaporParams params);
+  Future<LaporModel>? getRemoteSekolahLapor(RiwayatLaporParams params);
+  Future<UpdateStatusModel>? updataStatusLaporRemote(StatusParams params);
 }
 
-class LaporRemoteDatasourceImpl extends LaporRemoteDatasource {
+class LaporRemoteDatasourceImpl implements LaporRemoteDatasource {
   final Client client;
 
   LaporRemoteDatasourceImpl({required this.client});
@@ -58,6 +60,42 @@ class LaporRemoteDatasourceImpl extends LaporRemoteDatasource {
     );
     if(response.statusCode == 200){
       return RegisterModel.fromJson(jsonDecode(response.body));
+    } else {
+      throw ServerException();
+    }
+  }
+  
+  @override
+  Future<LaporModel>? getRemoteSekolahLapor(RiwayatLaporParams params) async {
+    final response = await client.get(
+      Uri.http(
+        URL, 
+        '/api/lapor/bysekolah',
+        {
+          'sekolahId': params.authId
+        }
+      ),
+    );
+    if(response.statusCode == 200){
+      return LaporModel.fromJson(jsonDecode(response.body));
+    } else {
+      throw ServerException();
+    }
+  }
+  
+  @override
+  Future<UpdateStatusModel>? updataStatusLaporRemote(StatusParams params) async {
+    final response = await client.patch(
+      Uri.http(
+        URL, 
+        '/api/lapor/update/${params.laporanId}'
+      ),
+      body: {
+        "status": params.status
+      }
+    );
+    if(response.statusCode == 200) {
+      return UpdateStatusModel.fromJson(jsonDecode(response.body));
     } else {
       throw ServerException();
     }

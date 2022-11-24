@@ -250,8 +250,8 @@ class _ReportScreenState extends State<ReportScreen> {
                     uraian: uraianEditingController.text,
                     isAnon: groupValue,
                     authId: user.data.id!,
-                    sekoalhId: user.data.sekolah!.id,
-                    status: 'SUBMITED'
+                    sekoalhId: user.data.sekolah!.id!,
+                    status: 'Terkirim'
                   )
                 )
               );

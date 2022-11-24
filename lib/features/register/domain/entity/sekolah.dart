@@ -6,8 +6,8 @@ class Sekolah extends Equatable{
     required this.namaSekolah,
   });
 
-  final int id;
-  final String namaSekolah;
+  final int? id;
+  final String? namaSekolah;
 
   @override
   List<Object?> get props => [id, namaSekolah];

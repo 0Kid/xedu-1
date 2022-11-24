@@ -15,6 +15,8 @@ import 'package:xedu/features/home/domain/usecases/banner_usecase.dart';
 import 'package:xedu/features/home/domain/usecases/news_usecase.dart';
 import 'package:xedu/features/home/presentation/bloc/banner_bloc.dart';
 import 'package:xedu/features/home/presentation/bloc/news_bloc.dart';
+import 'package:xedu/features/home/presentation/bloc/status_pelaporan_bloc.dart';
+import 'package:xedu/features/home/presentation/bloc/update_status_bloc.dart';
 import 'package:xedu/features/login/data/datasources/login_local_data_source.dart';
 import 'package:xedu/features/login/data/datasources/login_remote_data_source.dart';
 import 'package:xedu/features/login/data/repositories/login_repository_impl.dart';
@@ -37,8 +39,10 @@ import 'package:xedu/features/report/data/datasource/lapor_local_datasource.dart
 import 'package:xedu/features/report/data/datasource/lapor_remote_datasource.dart';
 import 'package:xedu/features/report/data/repositories/lapor_repository_impl.dart';
 import 'package:xedu/features/report/domain/repositories/lapor_repository.dart';
+import 'package:xedu/features/report/domain/usecase/get_lapor_sekolah_usecase.dart';
 import 'package:xedu/features/report/domain/usecase/get_lapor_usecase.dart';
 import 'package:xedu/features/report/domain/usecase/post_lapor_usecase.dart';
+import 'package:xedu/features/report/domain/usecase/update_status_lapor_usecase.dart';
 import 'package:xedu/features/report/presentation/bloc/lapor_bloc.dart';
 
 final sl = GetIt.instance;
@@ -47,12 +51,17 @@ Future<void> init() async {
   //!Features
   //login
   //bloc
-  sl.registerFactory(() => LoginBloc(postLogin: sl()));
+  sl.registerFactory(() => LoginBloc(postLogin: sl(), postLoginAdmin: sl()));
   sl.registerFactory(() => AuthBloc(fetch: sl()));
+  sl.registerFactory(() => StatusPelaporanBloc(usecase: sl()));
+  sl.registerFactory(() => UpdateStatusBloc(usecase: sl()));
 
   //Use Case
   sl.registerLazySingleton(() => PostLogin(sl()));
   sl.registerLazySingleton(() => GetUserData(sl()));
+  sl.registerLazySingleton(() => PostLoginAdmin(repository: sl()));
+  sl.registerLazySingleton(() => GetRiwayatLaporSekolah(repository: sl()));
+  sl.registerLazySingleton(() => UpdateStatusLaporan(repository: sl()));
 
   //repository
   sl.registerLazySingleton<LoginRepository>(() => LoginRepositoryImpl(remoteDataSource: sl(), localDataSource: sl(), networkInfo: sl()));

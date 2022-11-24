@@ -14,6 +14,15 @@ class LaporModel extends Lapor {
   };
 }
 
+class UpdateStatusModel extends UpdateStatus {
+  const UpdateStatusModel({required super.lapor});
+  factory UpdateStatusModel.fromJson(Map<String, dynamic> json){
+    return UpdateStatusModel(
+      lapor: LaporDataModel.fromJson(json["data"])
+    );
+  }
+}
+
 class LaporDataModel extends LaporData {
   const LaporDataModel({required super.id, required super.namaPelaku, required super.tempatKejadian, required super.tanggalKejadian, required super.hubungan, required super.uraian, required super.isAnon, required super.status, required super.createdAt, required super.authId, required super.sekoalhId});
   
@@ -26,8 +35,8 @@ class LaporDataModel extends LaporData {
       hubungan: json['hubungan'], 
       uraian: json['uraian'], 
       isAnon: json['isAnonym'], 
-      status: json['status'], 
-      createdAt: DateTime.parse(json['createdAt']), 
+      status: json['status'].toString(), 
+      createdAt: json['createdAt'] == null ? null : DateTime.parse(json['createdAt']), 
       authId: json['authId'], 
       sekoalhId: json['sekolahId']
     );

@@ -1,50 +1,44 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:xedu/features/login/presentation/bloc/login_bloc.dart';
 import 'package:xedu/features/login/presentation/views/auth_view.dart';
-import 'package:xedu/features/login/presentation/views/login_admin_view.dart';
-import 'package:xedu/features/register/presentation/views/register_view.dart';
-import 'package:xedu/features/widgets/dialog_widget.dart';
-import 'package:xedu/injection_container.dart';
+import 'package:xedu/features/login/presentation/views/login_view.dart';
 import 'package:xedu/themes/color.dart';
+import 'package:xedu/widgets/custom_dialog_widget.dart';
 import 'package:xedu/widgets/form_widget.dart';
 import 'package:xedu/widgets/text_widget.dart';
 
-class LoginView extends StatelessWidget {
-  const LoginView({Key? key}) : super(key: key);
+class LoginAdminView extends StatelessWidget {
+  const LoginAdminView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<LoginBloc>(),
-      child: LoginPage(),
-    );
+    return LoginAdminPage();
   }
 }
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class LoginAdminPage extends StatefulWidget {
+  const LoginAdminPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginAdminPage> createState() => _LoginAdminPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  late TextEditingController emailEditingController;
-  late TextEditingController passwordEditingController;
-  bool isObscure = true;
-  bool? isBoxChecked = false;
-  final _formKey = GlobalKey<FormState>();
+class _LoginAdminPageState extends State<LoginAdminPage> {
 
-  @override
-  void initState() {
-    emailEditingController = TextEditingController();
-    passwordEditingController = TextEditingController();
-    super.initState();
-  }
+    late TextEditingController emailEditingController;
+    late TextEditingController passwordEditingController;
+    bool isObscure = true;
+    bool? isBoxChecked = false;
+    final _formKey = GlobalKey<FormState>();
 
+    @override
+    void initState() {
+      emailEditingController = TextEditingController();
+      passwordEditingController = TextEditingController();
+      super.initState();
+    }
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion(
@@ -96,22 +90,17 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(
                       height: 24,
                     ),
-                    registerText(),
-                    SizedBox(height: 12),
                     GestureDetector(
                       child: Center(
                         child: CustomTextWidget(
-                          text: 'login sebagai admin',
+                          text: 'login sebagai siswa',
                           weight: FontWeight.w500,
                           size: 13,
                         ),
                       ),
                       onTap: () => Navigator.pushReplacement(
                         context, 
-                        MaterialPageRoute(builder: (_) => BlocProvider(
-                          create: (context) => sl<LoginBloc>(),
-                          child: LoginAdminPage(),
-                        ))
+                        MaterialPageRoute(builder: (_) => LoginView())
                       ),
                     )
                   ],
@@ -147,44 +136,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Center registerText() {
-    return Center(
-      child: RichText(
-        text: TextSpan(
-          style: const TextStyle(
-            fontSize: 14,
-          ),
-          children: [
-            const TextSpan(
-              text: 'Belum punya akun? ',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
-                fontSize: 13,
-              ),
-            ),
-            TextSpan(
-              text: 'Buat akun',
-              style: const TextStyle(
-                color: kPrimaryColor,
-                fontWeight: FontWeight.w600,
-                decoration: TextDecoration.underline,
-                fontSize: 13,
-              ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () => Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (_) => const RegisterView(),
-                      ),
-                    ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Container elevatedButtonMasuk(BuildContext context) {
     return Container(
       height: 42,
@@ -202,7 +153,7 @@ class _LoginPageState extends State<LoginPage> {
       child: ElevatedButton(
         onPressed: () {
           if(_formKey.currentState!.validate()){
-            context.read<LoginBloc>().add(PostLoginEvent(email: emailEditingController.text, password: passwordEditingController.text));
+            context.read<LoginBloc>().add(PostLoginAdminEvent(nohp: emailEditingController.text, password: passwordEditingController.text));
           }
         },
         style: ElevatedButton.styleFrom(
@@ -269,8 +220,8 @@ class _LoginPageState extends State<LoginPage> {
   CustomFormWidget textfieldEmailWidget() {
     return CustomFormWidget(
       textEditingController: emailEditingController,
-      hintText: 'Email',
-      errorMessage: 'email tidak boleh kosong',
+      hintText: 'no telp',
+      errorMessage: 'no telp tidak boleh kosong',
     );
   }
 
@@ -284,7 +235,7 @@ class _LoginPageState extends State<LoginPage> {
 
   CustomTextWidget titleText() {
     return const CustomTextWidget(
-      text: 'Masuk',
+      text: 'Masuk Admin',
       color: Color.fromRGBO(43, 43, 67, 1),
       weight: FontWeight.w500,
       size: 23,

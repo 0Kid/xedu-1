@@ -7,7 +7,8 @@ class CustomTextWidget extends StatelessWidget {
     this.size = 12, 
     this.weight = FontWeight.w400, 
     this.color = Colors.black,
-    this.textAlign = TextAlign.start
+    this.textAlign = TextAlign.start,
+    this.isUsedMaxLines = true
   }) : super(key: key);
 
   final String text;
@@ -15,18 +16,19 @@ class CustomTextWidget extends StatelessWidget {
   final FontWeight weight;
   final Color color;
   final TextAlign textAlign;
+  final bool isUsedMaxLines;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
-      maxLines: 3,
+      maxLines: isUsedMaxLines ? 3 : null,
       textAlign: textAlign,
       style: TextStyle(
         fontSize: size,
         fontWeight: weight,
         color: color,
-        overflow: TextOverflow.ellipsis,
+        overflow: isUsedMaxLines ? TextOverflow.ellipsis : TextOverflow.visible,
       ),
     );
   }

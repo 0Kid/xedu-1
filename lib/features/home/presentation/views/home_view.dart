@@ -10,6 +10,7 @@ import 'package:xedu/features/home/domain/entity/banner.dart' as entity;
 import 'package:xedu/features/home/domain/entity/news.dart';
 import 'package:xedu/features/home/presentation/bloc/banner_bloc.dart';
 import 'package:xedu/features/home/presentation/bloc/news_bloc.dart';
+import 'package:xedu/features/home/presentation/views/detail_berita_view.dart';
 import 'package:xedu/features/home/presentation/widgets/icon_and_app_name_widget.dart';
 import 'package:xedu/features/home/presentation/widgets/icon_and_text_widget.dart';
 import 'package:xedu/features/home/presentation/widgets/listview_berita_widget.dart';
@@ -184,7 +185,13 @@ class _HomeScreenState extends State<HomeScreen> {
           return ListViewBeritaWidget(
             length: state.news.data.length, 
             data: state.news, 
-            isLoading: false
+            isLoading: false,
+            onTap: (index) {
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (_) => DetailBeritaView(news: state.news.data[index]))
+              );
+            },
           );
         } else if(state is NewsFailed) {
           return Text(state.message);
@@ -255,8 +262,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           RowImageAndTextWidget(
             image: 'assets/images/school.png',
-            subtitleText: user.data.sekolah!.namaSekolah.substring(8),
-            titleText: user.data.sekolah!.namaSekolah.substring(0, 7),
+            subtitleText: user.data.sekolah!.namaSekolah!.substring(8),
+            titleText: user.data.sekolah!.namaSekolah!.substring(0, 7),
             subtitleColor: Color.fromRGBO(97, 97, 97, 1),
           ),
         ],

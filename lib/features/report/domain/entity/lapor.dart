@@ -10,17 +10,17 @@ class Lapor extends Equatable {
 }
 
 class LaporData extends Equatable {
-  final int id;
-  final String namaPelaku;
-  final String tempatKejadian;
-  final String tanggalKejadian;
-  final String hubungan;
-  final String uraian;
-  final bool isAnon;
-  final String status;
-  final DateTime createdAt;
-  final int authId;
-  final int sekoalhId;
+  final int? id;
+  final String? namaPelaku;
+  final String? tempatKejadian;
+  final String? tanggalKejadian;
+  final String? hubungan;
+  final String? uraian;
+  final bool? isAnon;
+  final String? status;
+  final DateTime? createdAt;
+  final int? authId;
+  final int? sekoalhId;
 
   const LaporData({
     required this.id, 
@@ -45,7 +45,7 @@ class LaporData extends Equatable {
     'uraian': uraian,
     'isAnonym': isAnon,
     'status': status,
-    'createdAt': createdAt.toIso8601String(),
+    'createdAt': createdAt?.toIso8601String(),
     'authId': authId,
     'sekolahId': sekoalhId
   };
@@ -65,4 +65,13 @@ class LaporData extends Equatable {
     sekoalhId
   ];
   
+}
+
+class UpdateStatus extends Equatable {
+  final LaporData lapor;
+
+  const UpdateStatus({required this.lapor});
+
+  @override
+  List<Object?> get props => [lapor];
 }

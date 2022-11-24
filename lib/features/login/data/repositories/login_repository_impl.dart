@@ -39,4 +39,19 @@ class LoginRepositoryImpl implements LoginRepository{
       return Left(ServerFailure());
     }
   }
+  
+  @override
+  Future<Either<Failure, UserData>>? postLoginAdmin(String? email, String? password) async {
+    if(await networkInfo.isConnected) {
+      try {
+        final response = await remoteDataSource.authAdmin(email, password);
+        localDataSource.cacheUser(response!);
+        return Right(response);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      return Left(ServerFailure());
+    }
+  }
 }

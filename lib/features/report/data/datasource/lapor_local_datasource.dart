@@ -11,7 +11,7 @@ abstract class LaporLocalDatasource {
   Future<void>? cachedRiwayatLapor(LaporModel laporModel);
 }
 
-class LaporLocalDatasourceImpl extends LaporLocalDatasource {
+class LaporLocalDatasourceImpl implements LaporLocalDatasource {
   final SharedPreferences prefs;
 
   LaporLocalDatasourceImpl({required this.prefs});

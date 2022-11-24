@@ -8,14 +8,17 @@ import 'package:xedu/features/login/presentation/bloc/login_bloc.dart';
 import 'package:xedu/features/register/data/model/sekolah_model.dart';
 
 class MockPostLogin extends Mock implements PostLogin {}
+class MockPostLoginAdmin extends Mock implements PostLoginAdmin{}
 
 void main() {
   late LoginBloc bloc;
   late MockPostLogin mockPostLogin;
+  late MockPostLoginAdmin mockPostLoginAdmin;
 
   setUp((){
     mockPostLogin = MockPostLogin();
-    bloc = LoginBloc(postLogin: mockPostLogin);
+    mockPostLoginAdmin = MockPostLoginAdmin();
+    bloc = LoginBloc(postLogin: mockPostLogin, postLoginAdmin: mockPostLoginAdmin);
   });
 
   test('initState should be LoginInitial', () {
