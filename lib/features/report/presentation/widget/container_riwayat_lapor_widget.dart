@@ -84,7 +84,7 @@ class ContainerRiwayatLaporWidget extends StatelessWidget {
               Align(
                 alignment: Alignment.topLeft,
                 child: CustomTextWidget(
-                  text: DateFormat.yMMMMd('id').format(data.lapor[index].createdAt),
+                  text: data.lapor[index].tanggalKejadian,
                   weight: FontWeight.w500,
                   size: 15,
                   color: Colors.white,
